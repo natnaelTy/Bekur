@@ -3,7 +3,7 @@ import WaveLine from "../components/WaveLine"
 export default function Hero() {
   return (
     <div
-      className="relative flex items-center justify-center gap-2 min-h-screen p-2 flex-col text-center"
+      className="relative flex items-center justify-center gap-2 min-h-screen p-2 flex-col text-center bg-gray-50 dark:bg-gray-950 backdrop-blur-2xl hover:shadow-md transition-all rounded-2xl"
     >
       {/* Background gradient */}
       <div style={{background:
