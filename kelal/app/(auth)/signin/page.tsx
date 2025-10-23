@@ -18,8 +18,12 @@ import {
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { FcGoogle } from "react-icons/fc";
+import { toast } from "sonner";
+import { signIn } from "@/lib/auth-client";
+import { handleGoogleSignIn } from "@/lib/auth-client";
 
-// ✅ Zod validation schema for login
+
+// zod validation schema for login
 const loginSchema = z.object({
   email: z.string().email("Enter a valid email address"),
   password: z.string().min(6, "Password must be at least 6 characters long"),
@@ -27,7 +31,7 @@ const loginSchema = z.object({
 
 type LoginFormValues = z.infer<typeof loginSchema>;
 
-export default function signIn() {
+export default function signin() {
   const [showPassword, setShowPassword] = useState(false);
   const [loading, setLoading] = useState(false);
 
@@ -39,16 +43,18 @@ export default function signIn() {
   const onSubmit = async (data: LoginFormValues) => {
     setLoading(true);
     try {
-      const res = await fetch("/api/auth/login", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(data),
+      const {data: res, error } = await signIn.email({
+        email: data.email,
+        password: data.password
       });
-      if (!res.ok) throw new Error("Login failed");
-      alert("Login successful!");
-      form.reset();
+      if (error) {
+        toast.error(error.message);
+      } else {
+        toast.success("Login successful!");
+        form.reset();
+      }
     } catch (error) {
-      alert("Invalid credentials. Please try again.");
+      toast.error("Invalid credentials. Please try again.");
     } finally {
       setLoading(false);
     }
@@ -61,7 +67,7 @@ export default function signIn() {
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.6 }}
-          className="bg-white dark:bg-gray-900 p-8 md:p-20 w-full max-w-[610px] relative"
+          className="bg-white dark:bg-gray-950 p-8 md:p-20 w-full max-w-[610px] relative"
         >
           <h1 className="text-3xl text-slate-800 font-bold text-left mb-4 dark:text-white">
             Welcome Back
@@ -87,7 +93,7 @@ export default function signIn() {
                         <Mail className="absolute left-3 top-2 w-5 h-5 text-gray-400" />
                         <Input
                           type="email"
-                          placeholder="you@example.com"
+                          placeholder="your.email@example.com"
                           {...field}
                           className="pl-10"
                         />
@@ -159,7 +165,7 @@ export default function signIn() {
             </p>
             <Button
               variant="outline"
-              onClick={() => (window.location.href = "/api/auth/google")}
+              onClick={() => (handleGoogleSignIn())}
               className="w-full flex items-center justify-center gap-2"
             >
               <FcGoogle className="w-8 h-8 inline-block" />
@@ -177,27 +183,27 @@ export default function signIn() {
         </motion.div>
 
         {/* Decorative Background (Right Side) */}
-        <div className="bg-gradient-to-br from-blue-700 via-blue-400 to-sky-300 relative w-full hidden md:block overflow-hidden">
+        <div className="bg-gradient-to-br from-blue-800 via-blue-400 to-sky-300 relative w-full hidden md:block overflow-hidden">
           <div
             style={{
               background:
                 "radial-gradient(ellipse at center,rgba(255, 0, 123, 0.14),rgba(255, 0, 157, 0.16),rgba(255, 255, 255, 1))",
             }}
-            className="absolute top-0 left-90 w-[500px] h-[400px] rounded-full blur-3xl opacity-80 skew-x-32 dark:hidden"
+            className="absolute top-0 left-90 w-[500px] h-[400px] rounded-full blur-3xl opacity-80 skew-x-32"
           ></div>
           <div
             style={{
               background:
                 "radial-gradient(ellipse at center,rgba(255, 0, 191, 0.38),rgba(255, 0, 123, 0.39),rgba(255, 255, 255, 1))",
             }}
-            className="absolute bottom-0 left-0 w-[300px] h-[400px] rounded-full blur-3xl opacity-80 skew-x-32 dark:hidden"
+            className="absolute bottom-0 left-0 w-[300px] h-[400px] rounded-full blur-3xl opacity-80 skew-x-32"
           ></div>
           <div
             style={{
               background:
                 "radial-gradient(ellipse at center,rgba(0, 174, 255, 0.22),rgba(0, 238, 255, 0.2),rgba(255, 255, 255, 1))",
             }}
-            className="absolute bottom-0 left-0 w-[400px] h-[450px] rounded-full blur-3xl opacity-80 skew-x-32 dark:hidden"
+            className="absolute bottom-0 left-0 w-[400px] h-[450px] rounded-full blur-3xl opacity-80 skew-x-32"
           ></div>
         </div>
       </div>
