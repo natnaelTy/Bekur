@@ -14,47 +14,70 @@ datasource db {
 }
 
 model User {
-  id        String   @id @default(cuid())
-  email     String?  @unique
+  id            String    @id @default(cuid())
+  email         String?   @unique
   fullName      String?
-  phoneNumber   String? @unique
-  emailVerified  Boolean? @default(false)
-  accounts  Account[]
-  sessions  Session[]
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
+  phoneNumber   String?   @unique
+  emailVerified Boolean?  @default(false)
+  accounts      Account[]
+  sessions      Session[]
+  createdAt     DateTime  @default(now())
+  updatedAt     DateTime  @updatedAt
+  image         String?   @db.Text
+
+  @@map("User")
 }
 
 model Account {
-  id                 String   @id @default(cuid())
-  userId             String
-  accountId          String   @map("providerAccountId")
-  providerId         String
-  provider           String?
-  type               String?
-  access_token       String?
-  refresh_token      String?
-  expires_at         Int?
-  token_type         String?
-  scope              String?
-  id_token           String?
-  session_state      String?
-  password           String?
-  createdAt          DateTime @default(now())
-  updatedAt          DateTime @updatedAt
-  user               User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  id            String   @id @default(cuid())
+  userId        String
+  accountId     String   @map("providerAccountId")
+  providerId    String
+  provider      String?
+  type          String?
+  access_token  String?
+  refresh_token String?
+  expires_at    Int?
+  token_type    String?
+  scope         String?
+  id_token      String?
+  session_state String?
+  password      String?
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+  user          User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  accessToken           String?   @db.Text
+  refreshToken          String?   @db.Text
+  idToken               String?   @db.Text
+  accessTokenExpiresAt  DateTime?
+  refreshTokenExpiresAt DateTime?
 
   @@unique([providerId, accountId])
+  @@map("account")
 }
 
 model Session {
-  id           String   @id @default(cuid())
-  userId       String
-  token        String   @unique @map("sessionToken")
-  expiresAt    DateTime @map("expires")
-  ipAddress    String?
-  userAgent    String?
-  createdAt    DateTime @default(now())
-  updatedAt    DateTime @updatedAt
-  user         User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  id        String   @id @default(cuid())
+  userId    String
+  token     String   @unique @map("sessionToken")
+  expiresAt DateTime @map("expires")
+  ipAddress String?
+  userAgent String?
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@map("session")
+}
+
+model Verification {
+  id         String   @id
+  identifier String   @db.Text
+  value      String   @db.Text
+  expiresAt  DateTime
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @default(now()) @updatedAt
+
+  @@map("verification")
 }
