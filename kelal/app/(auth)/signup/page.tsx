@@ -20,7 +20,7 @@ import { FcGoogle } from "react-icons/fc";
 import { Button } from "@/components/ui/button";
 import { signUp } from "@/lib/auth-client";
 import { toast } from "sonner"
-
+import { handleGoogleSignIn } from "@/lib/auth-client";
 
 // Zod validation schema
 const signupSchema = z.object({
@@ -29,10 +29,6 @@ const signupSchema = z.object({
     .min(3, "Full name must be at least 3 characters long")
     .max(50, "Full name is too long"),
   email: z.string().email("Enter a valid email address"),
-  phoneNumber: z
-    .string()
-    .min(10, "Phone number must be at least 10 characters long")
-    .max(15, "Phone number must be at most 15 characters long"),
   password: z
     .string()
     .min(6, "Password must be at least 6 characters long")
@@ -47,19 +43,16 @@ export default function SignupPage() {
 
   const form = useForm<SignupFormValues>({
     resolver: zodResolver(signupSchema),
-    defaultValues: { fullName: "", email: "", phoneNumber: "", password: "" },
+    defaultValues: { fullName: "", email: "", password: "" },
   });
 
-  async function onSubmit(data: any) {
+  async function onSubmit(data: SignupFormValues) {
     setLoading(true);
     try {
       const { data: res, error } = await signUp.email({
         email: data.email,
         password: data.password,
-        name: data.fullName,
-        attributes: {
-          phoneNumber: data.phoneNumber,
-        },
+        name: data.fullName
       });
 
       if (error) {
@@ -142,29 +135,6 @@ export default function SignupPage() {
                   </FormItem>
                 )}
               />
-              <FormField
-                control={form.control}
-                name="phoneNumber"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel className="text-gray-700 dark:text-gray-300">
-                      Phone Number
-                    </FormLabel>
-                    <FormControl>
-                      <div className="relative">
-                        <Phone className="absolute left-3 top-2 w-5 h-5 text-gray-400" />
-                        <Input
-                          type="text"
-                          placeholder="+251 9XXXXXXXX"
-                          {...field}
-                          className="pl-10"
-                        />
-                      </div>
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
 
               {/* Password */}
               <FormField
@@ -220,7 +190,7 @@ export default function SignupPage() {
             </p>
             <Button
               variant="outline"
-              onClick={() => (window.location.href = "/api/auth/google")}
+              onClick={() => (handleGoogleSignIn())}
               className="w-full flex items-center justify-center gap-2"
             >
               <FcGoogle className="w-8 h-8 inline-block" />
@@ -231,7 +201,7 @@ export default function SignupPage() {
           {/* Footer */}
           <p className="text-center text-sm text-gray-600 dark:text-gray-400 mt-6">
             Already have an account?{" "}
-            <Link href="/login" className="text-blue-600 hover:underline">
+            <Link href="/signin" className="text-blue-600 hover:underline">
               Log in
             </Link>
           </p>
