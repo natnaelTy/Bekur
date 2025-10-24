@@ -11,7 +11,7 @@ export default function Banner() {
           Join thousands of students discovering global opportunities for study,
           travel, and research — all personalized by our AI engine.
         </p>
-        <button className="bg-white px-5 py-2 rounded-full text-black font-medium hover:bg-white/20 hover:text-white">
+        <button className="secondaryBtn">
           Get Started
         </button>
       </div>
