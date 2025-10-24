@@ -139,7 +139,7 @@ export default function AboutPage() {
           Start your journey today and let AI help you find the scholarship or
           conference that changes your life.
         </motion.p>
-        <button className="bg-white px-5 py-2 rounded-full text-black font-medium hover:bg-white/20 hover:text-white">
+        <button className="secondaryBtn">
           Get Started
         </button>
         {/* Decorative Background Blurs */}
