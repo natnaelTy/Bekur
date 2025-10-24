@@ -33,7 +33,7 @@ export default function ReferAndEarnPage() {
   ];
 
   return (
-    <div className="min-h-screen bg-gradient-to-b from-blue-50 via-white to-gray-50 dark:from-gray-950 dark:via-gray-950 dark:to-gray-950 text-gray-900 dark:text-white flex flex-col items-center">
+    <div className="min-h-screen bg-gray-50 dark:bg-gray-950 text-gray-900 dark:text-white flex flex-col items-center">
       {/* Hero Section */}
       <section className="text-center py-20 px-6 max-w-4xl">
         <motion.h1
@@ -48,7 +48,7 @@ export default function ReferAndEarnPage() {
           initial={{ opacity: 0, y: 10 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.8 }}
-          className="text-lg md:text-xl text-gray-700 dark:text-gray-300 leading-relaxed"
+          className="text-base md:text-lg text-gray-600 dark:text-gray-300 leading-relaxed"
         >
           Help your friends achieve their dreams — and get rewarded when they do!
           It’s simple, transparent, and rewarding.
@@ -70,7 +70,7 @@ export default function ReferAndEarnPage() {
                 <CardTitle className="text-xl font-bold">{step.title}</CardTitle>
               </CardHeader>
               <CardContent>
-                <p className="text-gray-600 dark:text-gray-400 text-sm leading-relaxed">
+                <p className="text-gray-600 dark:text-gray-400 text-sm md:text-base leading-relaxed">
                   {step.description}
                 </p>
               </CardContent>
@@ -99,7 +99,7 @@ export default function ReferAndEarnPage() {
           joins and gets accepted, you’ll earn exciting rewards or discounts.
         </motion.p>
         <div className="flex justify-center gap-4">
-          <button className="bg-white text-blue-700 px-6 py-2 rounded-full font-semibold hover:bg-white/20 hover:text-white transition-all">
+          <button className="secondaryBtn">
             Copy Referral Link
           </button>
           <button className="bg-transparent border border-white px-6 py-2 rounded-full font-semibold hover:bg-white hover:text-blue-700 transition-all">
