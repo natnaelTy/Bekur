@@ -7,73 +7,15 @@ import Flag from "@/app/components/Flag";
 import { GiEarthAmerica } from "react-icons/gi";
 import { GiEarthAsiaOceania } from "react-icons/gi";
 import { FaGlobeEurope } from "react-icons/fa";
+import { FaStar } from "react-icons/fa6";
+
 
 
 export default function PricingPage() {
   const plans = [
     {
-      title: "Eastern Europe",
-      price: "200,000 ETB",
-      countries: [
-        { name: "Romania", flag: "🇷🇴" },
-        { name: "Greece", flag: "🇬🇷" },
-        { name: "Turkey", flag: "🇹🇷" },
-        { name: "Hungary", flag: "🇭🇺" },
-        { name: "Czech Republic", flag: "🇨🇿" },
-      ],
-      description:
-        "Study affordably in top universities across Eastern Europe. Our team handles applications, document submission, and visa assistance end-to-end.",
-      icon: <FaGlobeEurope className="w-10 h-10 text-indigo-500" />,
-      features: [
-        "University matching & scholarship assistance",
-        "Application review and submission",
-        "Visa interview preparation",
-        "Full guidance until arrival",
-      ],
-    },
-    {
-      title: "Western Europe",
-      price: "250,000 ETB",
-      countries: [
-        { name: "France", flag: "🇫🇷" },
-        { name: "Germany", flag: "🇩🇪" },
-        { name: "United Kingdom", flag: "🇬🇧" },
-        { name: "Netherlands", flag: "🇳🇱" },
-        { name: "Italy", flag: "🇮🇹" },
-      ],
-      description:
-        "Premium services for top-tier universities in popular study destinations across Western Europe.",
-      icon: <FaGlobeEurope className="w-10 h-10 text-pink-500" />,
-      features: [
-        "Priority application support",
-        "Document optimization for scholarships",
-        "Dedicated visa & embassy support",
-        "One-on-one mentor consultation",
-      ],
-    },
-    {
-      title: "Asia",
-      price: "75,000 ETB",
-      countries: [
-        { name: "China", flag: "🇨🇳" },
-        { name: "Japan", flag: "🇯🇵" },
-        { name: "South Korea", flag: "🇰🇷" },
-        { name: "Malaysia", flag: "🇲🇾" },
-        { name: "India", flag: "🇮🇳" },
-      ],
-      description:
-        "Affordable and fast-track applications for students aiming to study in top Asian universities with partial or full scholarships.",
-      icon: <GiEarthAsiaOceania className="w-10 h-10 text-yellow-500" />,
-      features: [
-        "University selection & matching",
-        "Application document assistance",
-        "Basic visa support",
-        "Follow-up with institutions",
-      ],
-    },
-    {
       title: "Global Destinations",
-      price: "300,000 ETB",
+      price: "500,000+ ETB",
       countries: [
         { name: "Canada", flag: "🇨🇦" },
         { name: "Australia", flag: "🇦🇺" },
@@ -87,6 +29,53 @@ export default function PricingPage() {
         "Personalized visa interview training",
         "Scholarship and funding assistance",
         "Post-arrival accommodation guidance",
+      ],
+    },
+    {
+      title: "Europe",
+      price: "250,000 ETB",
+      countries: [
+        { name: "France", flag: "🇫🇷" },
+        { name: "Germany", flag: "🇩🇪" },
+        { name: "United Kingdom", flag: "🇬🇧" },
+        { name: "Netherlands", flag: "🇳🇱" },
+        { name: "Italy", flag: "🇮🇹" },
+        { name: "Romania", flag: "🇷🇴" },
+        { name: "Greece", flag: "🇬🇷" },
+        { name: "Turkey", flag: "🇹🇷" },
+      ],
+      description:
+        "Premium services for top-tier universities in popular study destinations across Europe.",
+      icon: <FaGlobeEurope className="w-10 h-10 text-pink-500" />,
+      features: [
+        "Priority application support",
+        "Document optimization for scholarships",
+        "University matching & scholarship assistance",
+        "Dedicated visa & embassy support",
+        "One-on-one mentor consultation",
+        "Full guidance until arrival",
+      ],
+    },
+    {
+      title: "Asia & The Middle East",
+      price: "75,000 ETB",
+      countries: [
+        { name: "China", flag: "🇨🇳" },
+        { name: "Thailand", flag: "🇹🇭" },
+        { name: "Malaysia", flag: "🇲🇾" },
+        { name: "United Arab Emirates", flag: "🇦🇪" },
+        { name: "India", flag: "🇮🇳" },
+        { name: "Saudi Arabia", flag: "🇸🇦" },
+        { name: "Qatar", flag: "🇶🇦" },
+      ],
+      description:
+        "Affordable and fast-track applications for students aiming to study in top Asian universities with partial or full scholarships.",
+      icon: <GiEarthAsiaOceania className="w-10 h-10 text-yellow-500" />,
+      features: [
+        "University selection & matching",
+        "Application document assistance",
+        "Basic visa support",
+        "Follow-up with institutions",
       ],
     },
   ];
@@ -107,7 +96,7 @@ export default function PricingPage() {
           initial={{ opacity: 0, y: 10 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.8 }}
-          className="text-lg md:text-xl text-gray-700 dark:text-gray-300 leading-relaxed"
+          className="text-base md:text-lg text-gray-700 dark:text-gray-300 leading-relaxed"
         >
           Our pricing is transparent and based on your preferred study region.
           Whether it’s Eastern Europe, Asia, or beyond — we make your study
@@ -116,7 +105,7 @@ export default function PricingPage() {
       </section>
 
       {/* Pricing Cards */}
-      <section className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 px-4 md:px-6 lg:px-10 max-w-10xl mb-20">
+      <section className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 px-4 md:px-6 lg:px-10 max-w-10xl mb-20">
         {plans.map((plan, index) => (
           <motion.div
             key={plan.title}
@@ -124,7 +113,13 @@ export default function PricingPage() {
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.6, delay: index * 0.15 }}
           >
-            <Card className="bg-white dark:bg-gray-950 border border-gray-100 dark:border-gray-900 backdrop-blur-xl rounded-2xl h-full hover:shadow-xl transition-all flex flex-col">
+            <Card className={index === 1 ? "bg-white dark:bg-gray-950 border-2 border-blue-500 dark:border-blue-600 backdrop-blur-xl rounded-2xl h-full max-w-sm hover:shadow-xl transition-all flex flex-col" : "bg-white dark:bg-gray-950 border border-gray-100 dark:border-gray-900 backdrop-blur-xl rounded-2xl h-full max-w-sm hover:shadow-xl transition-all flex flex-col"}>
+                  {/* most popular */}
+              {index === 1 && (
+                <span className="absolute top-4 right-4 bg-blue-600 text-white px-3 py-1 rounded-full text-sm font-medium flex items-center">
+                  Most popular <FaStar className="inline-block ml-2 text-yellow-400" />
+                </span>
+              )}
               <CardHeader className="text-center">
                 <div className="flex justify-center mb-4">{plan.icon}</div>
                 <CardTitle className="text-2xl font-bold">
@@ -184,9 +179,7 @@ export default function PricingPage() {
           Select your region, complete your application, and let our team handle
           everything — from scholarship search to visa support.
         </motion.p>
-        <button className="bg-white px-5 py-2 rounded-full text-black font-medium hover:bg-white/20 hover:text-white transition-all">
-          Get Started
-        </button>
+        <button className="secondaryBtn">Get Started</button>
       </section>
     </div>
   );
