@@ -142,10 +142,15 @@ export default function Navbar() {
           <GetUser />
         ) : (
           <div className="space-x-6 hidden md:block">
-            <button className="px-4 py-2 bg-transparent rounded-full hover:bg-gray-100 transition cursor-pointer font-medium text-sm dark:hover:bg-slate-800 dark:text-white">
+            <Link
+              href="/signin"
+              className="px-4 py-2 bg-transparent rounded-full hover:bg-gray-100 transition cursor-pointer font-medium text-sm dark:hover:bg-slate-800 dark:text-white"
+            >
               Sign in
-            </button>
-            <button className="primaryBtn">Start applying</button>
+            </Link>
+            <Link href="/signup" className="primaryBtn">
+              Start applying
+            </Link>
           </div>
         )}
         <TextAlignJustify
