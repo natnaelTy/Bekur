@@ -1,3 +1,5 @@
+"use client";
+
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -22,6 +24,26 @@ import {
   FileUser,
 } from "lucide-react";
 import { BiSupport } from "react-icons/bi";
+import { signOut } from "@/lib/auth-client";
+import { useEffect, useState } from "react";
+
+
+
+export function UserAvatar({ user }: { user: { name?: string; image?: string | null | undefined } }) {
+  return (
+    <Avatar className="w-9 h-9 border">
+      {user?.image ? (
+        <AvatarImage
+          key={user.image}
+          src={user.image}
+          alt={user.name || "User"}
+        />
+      ) : (
+        <AvatarFallback>{user?.name?.[0]?.toUpperCase() || "U"}</AvatarFallback>
+      )}
+    </Avatar>
+  );
+}
 
 export function GetUser() {
   const { data: session, isPending, error, refetch } = authClient.useSession();
@@ -31,23 +53,13 @@ export function GetUser() {
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
-        <Button className="w-8 h-8 rounded-full" variant="outline">
-          {isAuthenticated && (
-            <>
-              {user?.image === null || user?.image === undefined ? (
-                <Avatar>
-                  <AvatarImage src="https://github.com/shadcn.png" />
-                  <AvatarFallback>CN</AvatarFallback>
-                </Avatar>
-              ) : (
-                <Image
-                  src={user?.image}
-                  alt="User Avatar"
-                  width={32}
-                  height={32}
-                />
-              )}
-            </>
+        <Button className="w-9 h-9 rounded-full" variant="outline">
+           {isAuthenticated && user ? (
+            <UserAvatar user={user} />
+          ) : (
+            <Avatar className="w-8 h-8 border">
+              <AvatarFallback>U</AvatarFallback>
+            </Avatar>
           )}
         </Button>
       </DropdownMenuTrigger>
@@ -86,7 +98,7 @@ export function GetUser() {
           Support
         </DropdownMenuItem>
         <DropdownMenuSeparator />
-        <DropdownMenuItem>
+        <DropdownMenuItem onClick={() => signOut()}>
           <LogOut className="h-5 w-5" />
           Sign out
           <DropdownMenuShortcut>⇧⌘Q</DropdownMenuShortcut>
