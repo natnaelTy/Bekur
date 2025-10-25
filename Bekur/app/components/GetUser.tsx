@@ -14,7 +14,6 @@ import { useSession } from "@/lib/auth-client";
 import { authClient } from "@/lib/auth-client";
 import { Button } from "@/components/ui/button";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import Image from "next/image";
 import {
   UserRound,
   Bell,
@@ -26,7 +25,7 @@ import {
 import { BiSupport } from "react-icons/bi";
 import { signOut } from "@/lib/auth-client";
 import { useEffect, useState } from "react";
-
+import Link from "next/link";
 
 
 export function UserAvatar({ user }: { user: { name?: string; image?: string | null | undefined } }) {
@@ -49,6 +48,10 @@ export function GetUser() {
   const { data: session, isPending, error, refetch } = authClient.useSession();
   const isAuthenticated = !!session;
   const user = session?.user;
+  const [mounted, setMounted] = useState(false);
+
+  useEffect(() => setMounted(true), []);
+  if (!mounted) return null;
 
   return (
     <DropdownMenu>
@@ -68,34 +71,34 @@ export function GetUser() {
         <DropdownMenuGroup>
           <DropdownMenuItem>
             <UserRound className="h-5 w-5" />
-            Profile
+            <Link href="/profile">Profile</Link>
             <DropdownMenuShortcut>⇧⌘P</DropdownMenuShortcut>
           </DropdownMenuItem>
           <DropdownMenuItem>
             <LayoutDashboard className="h-5 w-5" />
-            Dashboard
+            <Link href="/dashboard">Dashboard</Link>
             <DropdownMenuShortcut>⌘D</DropdownMenuShortcut>
           </DropdownMenuItem>
           <DropdownMenuItem>
             <Settings className="h-5 w-5" />
-            Settings
+            <Link href="/settings">Settings</Link>
             <DropdownMenuShortcut>⌘S</DropdownMenuShortcut>
           </DropdownMenuItem>
           <DropdownMenuItem>
             <FileUser className="h-5 w-5" />
-            Apply
+            <Link href="/apply">Apply</Link>
             <DropdownMenuShortcut>⌘A</DropdownMenuShortcut>
           </DropdownMenuItem>
           <DropdownMenuItem>
             <Bell className="h-5 w-5" />
-            Notifications
+            <Link href="/notifications">Notifications</Link>
             <DropdownMenuShortcut>⌘N</DropdownMenuShortcut>
           </DropdownMenuItem>
         </DropdownMenuGroup>
         <DropdownMenuSeparator />
         <DropdownMenuItem>
           <BiSupport className="h-5 w-5" />
-          Support
+          <Link href="/support">Support</Link>
         </DropdownMenuItem>
         <DropdownMenuSeparator />
         <DropdownMenuItem onClick={() => signOut()}>
