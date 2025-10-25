@@ -158,7 +158,7 @@ export default function Navbar() {
           className="block md:hidden"
         />
       </div>
-      <div className="absolute right-12 top-4 md:top-6 md:right-8 hidden md:block">
+      <div className="absolute right-12 top-4 md:top-6 md:right-44 hidden md:block">
         <ThemeToggle />
       </div>
     </div>
