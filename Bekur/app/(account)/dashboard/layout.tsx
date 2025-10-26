@@ -1,18 +1,35 @@
+"use client";
+
+import {
+  SidebarProvider,
+  SidebarTrigger,
+  SidebarInset,
+} from "@/components/ui/sidebar";
 import SideBar from "./components/SideBar";
-import { SidebarProvider, SidebarTrigger } from "@/components/ui/sidebar";
+import { usePathname } from "next/navigation";
 
 export default function DashboardLayout({
   children,
 }: {
   children: React.ReactNode;
 }) {
+  const pathname = usePathname();
 
-  
   return (
-    <SidebarProvider className="bg-gray-50 dark:bg-gray-950 px-3">
-      <SideBar />
-      <SidebarTrigger className="block lg:hidden absolute top-20 left-3" />
-        {children}
+    <SidebarProvider>
+      <div className="flex min-h-screen bg-gray-50 dark:bg-gray-950 w-full">
+        <SideBar />
+
+        <SidebarInset>
+          <header className=" md:hidden absolute w-full top-0 z-50 left-0 bg-white dark:bg-gray-950 px-4 h-16 flex items-center justify-between">
+            <SidebarTrigger />
+          </header>
+
+          <main className="flex-1 overflow-y-auto">
+            {children}
+          </main>
+        </SidebarInset>
+      </div>
     </SidebarProvider>
   );
 }
