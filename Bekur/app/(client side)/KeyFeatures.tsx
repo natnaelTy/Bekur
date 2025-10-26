@@ -33,7 +33,7 @@ export default function KeyFeatures() {
   ];
 
   return (
-    <div className="min-h-screen text-white flex flex-col items-center justify-center px-6 py-20 bg-gradient-to-br from-indigo-50 via-white to-blue-50 dark:from-gray-950 dark:via-gray-950 dark:to-gray-950">
+    <div className="min-h-screen text-white flex flex-col items-center justify-center px-3 py-20 bg-gradient-to-br from-indigo-50 via-white to-blue-50 dark:from-gray-950 dark:via-gray-950 dark:to-gray-950">
       <motion.h1
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
