@@ -9,7 +9,6 @@ import {
   SidebarMenu,
   SidebarMenuItem,
   SidebarMenuButton,
-  SidebarTrigger
 } from "@/components/ui/sidebar";
 import {
   LayoutDashboard,
@@ -21,33 +20,32 @@ import {
 } from "lucide-react";
 import Link from "next/link";
 import { useState } from "react";
-
-
-
+import { signOut } from "@/lib/auth-client";
 export default function SideBar() {
   const [isOpen, setIsOpen] = useState(false);
 
   return (
     <>
       <Sidebar
-        className={`fixed left-0 top-0 h-screen bg-gray-950 text-white z-50 transform transition-transform duration-300 ${
+        className={`fixed left-0 top-0 h-screen bg-gray-950 text-white z-40 transform transition-transform duration-300 ${
           isOpen ? "translate-x-0" : "-translate-x-full md:translate-x-0"
         }`}
       >
-        <SidebarContent className="flex flex-col h-full justify-between bg-gray-50 dark:bg-gray-950">
+        <SidebarContent className="flex flex-col h-full justify-between bg-white dark:bg-gray-950">
           <div>
             <SidebarGroup>
               <SidebarGroupLabel className="text-blue-500 font-bold text-lg mb-8 uppercase tracking-wide px-4 mt-4">
                 Dashboard
               </SidebarGroupLabel>
+
               <SidebarGroupContent>
-                <SidebarMenu>
+                <SidebarMenu className="flex flex-col gap-2 text-gray-900 dark:text-gray-100">
                   <SidebarMenuItem>
-                    <SidebarMenuButton asChild>
-                      <Link
-                        href="/dashboard"
-                        className="flex items-center gap-3 px-4 py-2 hover:bg-gray-800 rounded-md"
-                      >
+                    <SidebarMenuButton
+                      asChild
+                      className="text-base hover:bg-gray-100 dark:hover:bg-gray-900 flex items-center gap-3 px-4 py-2 rounded-md"
+                    >
+                      <Link href="/dashboard" onClick={() => setIsOpen(false)}>
                         <LayoutDashboard className="w-5 h-5" />
                         Overview
                       </Link>
@@ -55,10 +53,13 @@ export default function SideBar() {
                   </SidebarMenuItem>
 
                   <SidebarMenuItem>
-                    <SidebarMenuButton asChild>
+                    <SidebarMenuButton
+                      asChild
+                      className="text-base hover:bg-gray-100 dark:hover:bg-gray-900 flex items-center gap-3 px-4 py-2 rounded-md"
+                    >
                       <Link
                         href="/dashboard/application"
-                        className="flex items-center gap-3 px-4 py-2 hover:bg-gray-800 rounded-md"
+                        onClick={() => setIsOpen(false)}
                       >
                         <FileText className="w-5 h-5" />
                         Application Details
@@ -67,10 +68,13 @@ export default function SideBar() {
                   </SidebarMenuItem>
 
                   <SidebarMenuItem>
-                    <SidebarMenuButton asChild>
+                    <SidebarMenuButton
+                      asChild
+                      className="text-base hover:bg-gray-100 dark:hover:bg-gray-900 flex items-center gap-3 px-4 py-2 rounded-md"
+                    >
                       <Link
                         href="/dashboard/payments"
-                        className="flex items-center gap-3 px-4 py-2 hover:bg-gray-800 rounded-md"
+                        onClick={() => setIsOpen(false)}
                       >
                         <CreditCard className="w-5 h-5" />
                         Payments Details
@@ -79,10 +83,13 @@ export default function SideBar() {
                   </SidebarMenuItem>
 
                   <SidebarMenuItem>
-                    <SidebarMenuButton asChild>
+                    <SidebarMenuButton
+                      asChild
+                      className="text-base hover:bg-gray-100 dark:hover:bg-gray-900 flex items-center gap-3 px-4 py-2 rounded-md"
+                    >
                       <Link
                         href="/dashboard/interview"
-                        className="flex items-center gap-3 px-4 py-2 hover:bg-gray-800 rounded-md"
+                        onClick={() => setIsOpen(false)}
                       >
                         <GraduationCap className="w-5 h-5" />
                         Interview Prep
@@ -94,13 +101,16 @@ export default function SideBar() {
             </SidebarGroup>
           </div>
 
-          <div className="px-4 mb-4">
+          <div className="px-4 mb-4 text-gray-900 dark:text-gray-100">
             <SidebarMenu>
               <SidebarMenuItem>
-                <SidebarMenuButton asChild>
+                <SidebarMenuButton
+                  asChild
+                  className="text-base hover:bg-gray-100 dark:hover:bg-gray-900 flex items-center gap-3 px-4 py-2 rounded-md"
+                >
                   <Link
                     href="/dashboard/settings"
-                    className="flex items-center gap-3 px-4 py-2 hover:bg-gray-800 rounded-md"
+                    onClick={() => setIsOpen(false)}
                   >
                     <Settings className="w-5 h-5" />
                     Settings
@@ -109,8 +119,11 @@ export default function SideBar() {
               </SidebarMenuItem>
 
               <SidebarMenuItem>
-                <SidebarMenuButton asChild>
-                  <button className="flex items-center gap-3 px-4 py-2 hover:bg-red-600 rounded-md w-full text-left">
+                <SidebarMenuButton
+                  asChild
+                  className="text-base hover:bg-gray-100 dark:hover:bg-gray-900 flex items-center gap-3 px-4 py-2 rounded-md"
+                >
+                  <button onClick={() => signOut()} className="flex items-center gap-3">
                     <LogOut className="w-5 h-5" />
                     Logout
                   </button>
@@ -120,8 +133,6 @@ export default function SideBar() {
           </div>
         </SidebarContent>
       </Sidebar>
-
-       
     </>
   );
 }
