@@ -1,4 +1,5 @@
 "use client";
+
 import Link from "next/link";
 import { TextAlignJustify } from "lucide-react";
 import ThemeToggle from "./ThemeToggle";
@@ -139,27 +140,30 @@ export default function Navbar() {
         </div>
 
         {isAuthenticated ? (
-          <GetUser />
+          <div className="flex items-center gap-4">
+            <ThemeToggle />
+            <GetUser />
+          </div>
         ) : (
-          <div className="space-x-6 hidden md:block">
-            <Link
-              href="/signin"
-              className="px-4 py-2 bg-transparent rounded-full hover:bg-gray-100 transition cursor-pointer font-medium text-sm dark:hover:bg-slate-800 dark:text-white"
-            >
-              Sign in
-            </Link>
-            <Link href="/signup" className="primaryBtn">
-              Start applying
-            </Link>
+          <div className="flex items-center gap-2">
+            <ThemeToggle />
+            <div className="space-x-6 hidden md:block">
+              <Link
+                href="/signin"
+                className="px-4 py-2 bg-transparent rounded-full hover:bg-gray-100 transition cursor-pointer font-medium text-sm dark:hover:bg-slate-800 dark:text-white"
+              >
+                Sign in
+              </Link>
+              <Link href="/signup" className="primaryBtn">
+                Apply Now
+              </Link>
+            </div>
           </div>
         )}
         <TextAlignJustify
           onClick={() => setShowDropdown(!showDropdown)}
           className="block md:hidden"
         />
-      </div>
-      <div className="absolute right-12 top-4 md:top-6 md:right-44 hidden md:block">
-        <ThemeToggle />
       </div>
     </div>
   );
