@@ -1,9 +1,6 @@
 "use client";
 
-import { useState } from "react";
-import { motion, AnimatePresence } from "framer-motion";
-import { ChevronDown } from "lucide-react";
-import { Card, CardContent } from "@/components/ui/card";
+import { motion } from "framer-motion";
 import {
   Accordion,
   AccordionContent,
@@ -35,14 +32,9 @@ export default function FAQ() {
     },
   ];
 
-  const [openIndex, setOpenIndex] = useState<number | null>(null);
-
-  const toggleFAQ = (index: number) => {
-    setOpenIndex(openIndex === index ? null : index);
-  };
 
   return (
-    <div className="min-h-screen flex flex-col items-center justify-center dark:bg-gray-950 px-6 py-12 relative">
+    <div className="min-h-screen flex flex-col items-center justify-center dark:bg-gray-950 px-3 py-12 relative w-full overflow-hidden">
       <motion.h1
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
@@ -71,9 +63,9 @@ export default function FAQ() {
             transition={{ duration: 0.4, delay: index * 0.1 }}
           >
             <Accordion type="single" collapsible>
-              <AccordionItem value="item-1">
-                <AccordionTrigger className="text-lg">{faq.question}</AccordionTrigger>
-                <AccordionContent className="text-base text-gray-700 dark:text-gray-400">
+              <AccordionItem value={`item-${index}`}>
+                <AccordionTrigger className="text-base md:text-lg">{faq.question}</AccordionTrigger>
+                <AccordionContent className="text-sm md:text-base text-gray-700 dark:text-gray-400">
                   {faq.answer}
                 </AccordionContent>
               </AccordionItem>
