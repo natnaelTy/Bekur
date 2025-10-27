@@ -35,7 +35,7 @@ export default function SideBar() {
           <div>
             <SidebarGroup>
               <SidebarGroupLabel className="text-blue-500 font-bold text-lg mb-8 uppercase tracking-wide px-4 mt-4">
-                Dashboard
+                Client Dashboard
               </SidebarGroupLabel>
 
               <SidebarGroupContent>
@@ -58,7 +58,7 @@ export default function SideBar() {
                       className="text-base hover:bg-gray-100 dark:hover:bg-gray-900 flex items-center gap-3 px-4 py-2 rounded-md"
                     >
                       <Link
-                        href="/dashboard/application"
+                        href="/dashboard/application_details"
                         onClick={() => setIsOpen(false)}
                       >
                         <FileText className="w-5 h-5" />
@@ -73,7 +73,7 @@ export default function SideBar() {
                       className="text-base hover:bg-gray-100 dark:hover:bg-gray-900 flex items-center gap-3 px-4 py-2 rounded-md"
                     >
                       <Link
-                        href="/dashboard/payments"
+                        href="/dashboard/payments_details"
                         onClick={() => setIsOpen(false)}
                       >
                         <CreditCard className="w-5 h-5" />
