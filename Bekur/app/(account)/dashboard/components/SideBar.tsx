@@ -88,7 +88,7 @@ export default function SideBar() {
                       className="text-base hover:bg-gray-100 dark:hover:bg-gray-900 flex items-center gap-3 px-4 py-2 rounded-md"
                     >
                       <Link
-                        href="/dashboard/interview"
+                        href="/dashboard/interview_prep"
                         onClick={() => setIsOpen(false)}
                       >
                         <GraduationCap className="w-5 h-5" />
