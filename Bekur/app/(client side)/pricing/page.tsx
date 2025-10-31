@@ -9,8 +9,6 @@ import { GiEarthAsiaOceania } from "react-icons/gi";
 import { FaGlobeEurope } from "react-icons/fa";
 import { FaStar } from "react-icons/fa6";
 
-
-
 export default function PricingPage() {
   const plans = [
     {
@@ -62,10 +60,10 @@ export default function PricingPage() {
       countries: [
         { name: "China", flag: "🇨🇳" },
         { name: "Thailand", flag: "🇹🇭" },
-        { name: "Malaysia", flag: "🇲🇾" },
-        { name: "United Arab Emirates", flag: "🇦🇪" },
+        { name: "Japan", flag: "🇯🇵" },
+        { name: "Korea", flag: "🇰🇷" },
         { name: "India", flag: "🇮🇳" },
-        { name: "Saudi Arabia", flag: "🇸🇦" },
+        { name: "United Arab Emirates", flag: "🇦🇪" },
         { name: "Qatar", flag: "🇶🇦" },
       ],
       description:
@@ -113,11 +111,18 @@ export default function PricingPage() {
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.6, delay: index * 0.15 }}
           >
-            <Card className={index === 1 ? "bg-white dark:bg-gray-950 border-2 border-blue-500 dark:border-blue-600 backdrop-blur-xl rounded-2xl h-full max-w-sm hover:shadow-xl transition-all flex flex-col" : "bg-white dark:bg-gray-950 border border-gray-100 dark:border-gray-900 backdrop-blur-xl rounded-2xl h-full max-w-sm hover:shadow-xl transition-all flex flex-col"}>
-                  {/* most popular */}
+            <Card
+              className={
+                index === 1
+                  ? "bg-white dark:bg-gray-950 border-2 border-blue-500 dark:border-blue-600 backdrop-blur-xl rounded-2xl h-full max-w-sm hover:shadow-xl transition-all flex flex-col"
+                  : "bg-white dark:bg-gray-950 border border-gray-100 dark:border-gray-900 backdrop-blur-xl rounded-2xl h-full max-w-sm hover:shadow-xl transition-all flex flex-col"
+              }
+            >
+              {/* popular */}
               {index === 1 && (
                 <span className="absolute top-4 right-4 bg-blue-600 text-white px-3 py-1 rounded-full text-sm font-medium flex items-center">
-                  Most popular <FaStar className="inline-block ml-2 text-yellow-400" />
+                  Popular{" "}
+                  <FaStar className="inline-block ml-2 text-yellow-400" />
                 </span>
               )}
               <CardHeader className="text-center">
