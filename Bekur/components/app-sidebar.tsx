@@ -1,28 +1,29 @@
-"use client"
+"use client";
 
-import * as React from "react"
+import * as React from "react";
 import {
   IconCamera,
   IconChartBar,
-  IconDashboard,
   IconDatabase,
   IconFileAi,
   IconFileDescription,
   IconFileWord,
-  IconFolder,
   IconHelp,
-  IconInnerShadowTop,
-  IconListDetails,
   IconReport,
   IconSearch,
   IconSettings,
   IconUsers,
-} from "@tabler/icons-react"
+  IconLayoutDashboard,
+  IconClipboardText,
+  IconCreditCard,
+  IconBrandSpacehey,
+  IconBell,
+} from "@tabler/icons-react";
 
-import { NavDocuments } from "@/components/nav-documents"
-import { NavMain } from "@/components/nav-main"
-import { NavSecondary } from "@/components/nav-secondary"
-import { NavUser } from "@/components/nav-user"
+import { NavDocuments } from "@/components/nav-documents";
+import { NavMain } from "@/components/nav-main";
+import { NavSecondary } from "@/components/nav-secondary";
+import { NavUser } from "@/components/nav-user";
 import {
   Sidebar,
   SidebarContent,
@@ -31,8 +32,8 @@ import {
   SidebarMenu,
   SidebarMenuButton,
   SidebarMenuItem,
-} from "@/components/ui/sidebar"
-
+} from "@/components/ui/sidebar";
+import Image from "next/image";
 const data = {
   user: {
     name: "shadcn",
@@ -41,14 +42,14 @@ const data = {
   },
   navMain: [
     {
-      title: "Dashboard",
+      title: "Overview",
       url: "#",
-      icon: IconDashboard,
+      icon: IconLayoutDashboard,
     },
     {
-      title: "Lifecycle",
+      title: "Applications",
       url: "#",
-      icon: IconListDetails,
+      icon: IconClipboardText,
     },
     {
       title: "Analytics",
@@ -56,14 +57,24 @@ const data = {
       icon: IconChartBar,
     },
     {
-      title: "Projects",
-      url: "#",
-      icon: IconFolder,
-    },
-    {
-      title: "Team",
+      title: "Users",
       url: "#",
       icon: IconUsers,
+    },
+    {
+      title: "Payments",
+      url: "#",
+      icon: IconCreditCard,
+    },
+    {
+      title: "Interviews",
+      url: "#",
+      icon: IconBrandSpacehey,
+    },
+    {
+      title: "Notifications",
+      url: "#",
+      icon: IconBell,
     },
   ],
   navClouds: [
@@ -148,7 +159,7 @@ const data = {
       icon: IconFileWord,
     },
   ],
-}
+};
 
 export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
   return (
@@ -160,10 +171,9 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
               asChild
               className="data-[slot=sidebar-menu-button]:!p-1.5"
             >
-              <a href="#">
-                <IconInnerShadowTop className="!size-5" />
-                <span className="text-base font-semibold">Acme Inc.</span>
-              </a>
+              <span className="text-base font-semibold">
+                <Image src="/bekur.png" width={120} height={120} alt="Image" />
+              </span>
             </SidebarMenuButton>
           </SidebarMenuItem>
         </SidebarMenu>
@@ -177,5 +187,5 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
         <NavUser user={data.user} />
       </SidebarFooter>
     </Sidebar>
-  )
+  );
 }
