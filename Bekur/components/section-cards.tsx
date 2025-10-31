@@ -16,8 +16,8 @@ export function SectionCards() {
       <Card className="@container/card">
         <CardHeader>
           <CardDescription>Total Revenue</CardDescription>
-          <CardTitle className="text-2xl font-semibold tabular-nums @[250px]/card:text-3xl">
-            $1,250.00
+          <CardTitle className="text-2xl flex items-center font-semibold tabular-nums @[250px]/card:text-3xl">
+            1,250.00 <span className="ml-1">ETB</span>
           </CardTitle>
           <CardAction>
             <Badge variant="outline">
@@ -37,9 +37,9 @@ export function SectionCards() {
       </Card>
       <Card className="@container/card">
         <CardHeader>
-          <CardDescription>New Customers</CardDescription>
+          <CardDescription>Pending Payments</CardDescription>
           <CardTitle className="text-2xl font-semibold tabular-nums @[250px]/card:text-3xl">
-            1,234
+            40
           </CardTitle>
           <CardAction>
             <Badge variant="outline">
@@ -59,9 +59,9 @@ export function SectionCards() {
       </Card>
       <Card className="@container/card">
         <CardHeader>
-          <CardDescription>Active Accounts</CardDescription>
+          <CardDescription>Total Applications</CardDescription>
           <CardTitle className="text-2xl font-semibold tabular-nums @[250px]/card:text-3xl">
-            45,678
+            300
           </CardTitle>
           <CardAction>
             <Badge variant="outline">
@@ -79,9 +79,9 @@ export function SectionCards() {
       </Card>
       <Card className="@container/card">
         <CardHeader>
-          <CardDescription>Growth Rate</CardDescription>
+          <CardDescription>Application in Progress</CardDescription>
           <CardTitle className="text-2xl font-semibold tabular-nums @[250px]/card:text-3xl">
-            4.5%
+            128
           </CardTitle>
           <CardAction>
             <Badge variant="outline">
