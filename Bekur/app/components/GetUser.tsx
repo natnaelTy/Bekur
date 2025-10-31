@@ -15,18 +15,16 @@ import { authClient } from "@/lib/auth-client";
 import { Button } from "@/components/ui/button";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import {
-  UserRound,
   Bell,
   Settings,
   LayoutDashboard,
   LogOut,
-  FileUser,
 } from "lucide-react";
 import { BiSupport } from "react-icons/bi";
 import { signOut } from "@/lib/auth-client";
 import { useEffect, useState } from "react";
 import Link from "next/link";
-
+import { IconUser, IconFilePencil  } from '@tabler/icons-react';
 
 export function UserAvatar({ user }: { user: { name?: string; image?: string | null | undefined } }) {
   return (
@@ -67,44 +65,58 @@ export function GetUser() {
         </Button>
       </DropdownMenuTrigger>
       <DropdownMenuContent className="w-56 dark:bg-gray-950" align="start">
-        <DropdownMenuLabel>My Account</DropdownMenuLabel>
+        <DropdownMenuLabel>
+          {isAuthenticated && user ? (
+            <div className="flex items-center gap-2 justify-center">
+              <UserAvatar user={user} />
+              <div className="flex flex-col space-y-1">
+                <span className="font-medium">{user.name}</span>
+                <span className="text-xs text-gray-500 dark:text-gray-400">
+                  {user.email}
+                </span>
+              </div>
+            </div>
+          ) : (
+            <span className="font-medium">Guest User</span>
+          )}
+        </DropdownMenuLabel>
         <DropdownMenuGroup>
-          <DropdownMenuItem>
-            <UserRound className="h-5 w-5" />
-            <Link href="/profile">Profile</Link>
+          <DropdownMenuItem className="dark:hover:bg-gray-900">
+            <IconUser className="h-5 w-5" />
+            <Link href="/profile">View Profile</Link>
             <DropdownMenuShortcut>⇧⌘P</DropdownMenuShortcut>
           </DropdownMenuItem>
-          <DropdownMenuItem>
+          <DropdownMenuItem className="dark:hover:bg-gray-900">
             <LayoutDashboard className="h-5 w-5" />
             <Link href="/dashboard">Dashboard</Link>
             <DropdownMenuShortcut>⌘D</DropdownMenuShortcut>
           </DropdownMenuItem>
-          <DropdownMenuItem>
+          <DropdownMenuItem className="dark:hover:bg-gray-900">
             <Settings className="h-5 w-5" />
             <Link href="/settings">Settings</Link>
             <DropdownMenuShortcut>⌘S</DropdownMenuShortcut>
           </DropdownMenuItem>
-          <DropdownMenuItem>
-            <FileUser className="h-5 w-5" />
+          <DropdownMenuItem className="dark:hover:bg-gray-900">
+            <IconFilePencil className="h-5 w-5" />
             <Link href="/apply">Apply</Link>
             <DropdownMenuShortcut>⌘A</DropdownMenuShortcut>
           </DropdownMenuItem>
-          <DropdownMenuItem>
+          <DropdownMenuItem className="dark:hover:bg-gray-900">
             <Bell className="h-5 w-5" />
             <Link href="/notifications">Notifications</Link>
             <DropdownMenuShortcut>⌘N</DropdownMenuShortcut>
           </DropdownMenuItem>
         </DropdownMenuGroup>
         <DropdownMenuSeparator />
-        <DropdownMenuItem>
+        <DropdownMenuItem className="dark:hover:bg-gray-900">
           <BiSupport className="h-5 w-5" />
           <Link href="/support">Support</Link>
         </DropdownMenuItem>
         <DropdownMenuSeparator />
-        <DropdownMenuItem onClick={() => signOut()}>
+        <DropdownMenuItem onClick={() => signOut()} className="dark:hover:bg-gray-900">
           <LogOut className="h-5 w-5" />
           Sign out
-          <DropdownMenuShortcut>⇧⌘Q</DropdownMenuShortcut>
+          <DropdownMenuShortcut>⇧⌘S</DropdownMenuShortcut>
         </DropdownMenuItem>
       </DropdownMenuContent>
     </DropdownMenu>
