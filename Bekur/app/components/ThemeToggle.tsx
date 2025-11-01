@@ -33,7 +33,7 @@ export default function ThemeSwitcher() {
   return (
     <DropdownMenu open={open} onOpenChange={setOpen}>
       <DropdownMenuTrigger asChild>
-        <Button className="bg-transparent hover:bg-gray-100 dark:hover:bg-gray-900 text-black dark:text-white">
+        <Button className="bg-transparent dark:bg-transparent rounded-md hover:bg-gray-100 dark:hover:bg-gray-900 text-black dark:text-white">
           {value === "light" ? (
             <SunIcon />
           ) : value === "dark" ? (
