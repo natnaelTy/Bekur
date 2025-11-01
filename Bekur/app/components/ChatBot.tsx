@@ -87,7 +87,7 @@ export default function ChatbotPage() {
               onKeyDown={handleKeyDown}
             />
             <Button onClick={sendMessage} className="bg-blue-600 hover:bg-blue-700 text-white">
-              <Send className="w-4 h-4 mr-1" /> Send
+              <span className="hidden md:block">Send</span>  <Send className="w-4 h-4" />
             </Button>
           </div>
         </CardContent>
