@@ -3,7 +3,7 @@ import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
 import { ThemeProviderWrapper } from "./components/ThemeProviderWrapper";
 import { Toaster } from "@/components/ui/sonner"
-
+import ChatbotPage from "./components/ChatBot";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -32,6 +32,7 @@ export default function RootLayout({
       >
         <ThemeProviderWrapper>{children}</ThemeProviderWrapper>
         <Toaster position="top-right" richColors />
+        <ChatbotPage />
       </body>
     </html>
   );
