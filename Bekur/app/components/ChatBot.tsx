@@ -1,102 +1,66 @@
-"use client";
+// app/page.js
+'use client';
 
-import { useEffect, useState } from "react";
-import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card";
-import { Input } from "@/components/ui/input";
-import { Button } from "@/components/ui/button";
-import { ScrollArea } from "@/components/ui/scroll-area";
-import { Send, Bot, X } from "lucide-react";
-import { cn } from "@/lib/utils";
-import { IconMessageChatbot } from '@tabler/icons-react';
+import { useState } from 'react';
 
+export default function ChatApp() {
+  const [input, setInput] = useState('');
+  const [output, setOutput] = useState('Ask the GPT-OSS model a question...');
+  const [isLoading, setIsLoading] = useState(false);
 
-type Message = {
-  id: number;
-  sender: "user" | "bot";
-  text: string;
-};
+  const handleSubmit = async (e: any) => {
+    e.preventDefault();
+    if (!input.trim() || isLoading) return;
 
-export default function ChatbotPage() {
-  const [messages, setMessages] = useState<Message[]>([
-    { id: 1, sender: "bot", text: "👋 Hello! How can I help you today?" },
-  ]);
-  const [input, setInput] = useState("");
-  const [openModal, setOpenModal] = useState<boolean>(false);
+    setOutput('Thinking...');
+    setIsLoading(true);
 
-  const sendMessage = () => {
-    if (!input.trim()) return;
+    try {
+      // 1. Call your Next.js API Route
+      const res = await fetch('/api/chat', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ message: input }),
+      });
 
-    const newMessage: Message = {
-      id: Date.now(),
-      sender: "user",
-      text: input.trim(),
-    };
-    setMessages((prev) => [...prev, newMessage]);
-    setInput("");
+      const data = await res.json();
 
-    setTimeout(() => {
-      setMessages((prev) => [
-        ...prev,
-        { id: Date.now() + 1, sender: "bot", text: "Thanks for your message! We'll get back to you soon." },
-      ]);
-    }, 1000);
+      if (data.error) {
+        setOutput(`Error: ${data.error}`);
+      } else {
+        // 2. Display the response from the LLM
+        setOutput(data.response);
+        setInput('');
+      }
+    } catch (error) {
+      console.error("Frontend Fetch Error:", error);
+      setOutput('An unexpected network error occurred.');
+    } finally {
+      setIsLoading(false);
+    }
   };
-
-  const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
-    if (e.key === "Enter") sendMessage();
-  };
-
 
   return (
-    <div className="p-4 fixed bottom-5 z-50 right-2 w-full md:w-96">
-      <Card className={"max-w-3xl mx-auto border border-gray-200 dark:border-gray-800 bg-white dark:bg-gray-900 shadow-md flex flex-col h-[70vh]"} style={{ display: openModal ? 'flex' : 'none' }}>
-        <CardHeader className="border-b border-gray-100 dark:border-gray-800">
-          <CardTitle className="text-xl font-semibold"> <Bot className="inline w-6 h-6 mr-2" /> AI Chatbot Assistant</CardTitle>
-        </CardHeader>
-
-        <CardContent className="flex flex-col flex-1 p-0">
-          <ScrollArea className="flex-1 p-4 space-y-4 overflow-y-auto">
-            {messages.map((msg) => (
-              <div
-                key={msg.id}
-                className={cn(
-                  "flex",
-                  msg.sender === "user" ? "justify-end" : "justify-start"
-                )}
-              >
-                <div
-                  className={cn(
-                    "max-w-[75%] px-4 py-2 rounded-2xl text-sm shadow-sm",
-                    msg.sender === "user"
-                      ? "bg-blue-600 text-white rounded-br-none"
-                      : "bg-gray-200 dark:bg-gray-800 text-gray-900 dark:text-gray-100 rounded-bl-none"
-                  )}
-                >
-                  {msg.text}
-                </div>
-              </div>
-            ))}
-          </ScrollArea>
-
-          <div className="flex items-center gap-2 border-t border-gray-100 dark:border-gray-800 p-4">
-            <Input
-              placeholder="Ask me anything..."
-              className="flex-1 dark:bg-gray-800"
-              value={input}
-              onChange={(e) => setInput(e.target.value)}
-              onKeyDown={handleKeyDown}
-            />
-            <Button onClick={sendMessage} className="bg-blue-600 hover:bg-blue-700 text-white">
-              <span className="hidden md:block">Send</span>  <Send className="w-4 h-4" />
-            </Button>
-          </div>
-        </CardContent>
-      </Card>
-
-      <div className="w-12 h-12 rounded-full bg-blue-600 flex items-center ml-auto mt-4 cursor-pointer shadow-lg" onClick={() => setOpenModal(!openModal)}>
-        {openModal ? <X className="w-6 h-6 text-white m-auto" /> : <IconMessageChatbot className="w-6 h-6 text-white m-auto" />}
+    <div className='bg-red-400 w-96 h-96 p-4 flex flex-col absolute top-1/2 left-50 transform -translate-x-1/2 -translate-y-1/2'>
+      <h1>GPT-OSS Chat</h1>
+      <div >
+        {output}
       </div>
+      <form onSubmit={handleSubmit}>
+        <input
+          type="text"
+          value={input}
+          onChange={(e) => setInput(e.target.value)}
+          placeholder="Type your message here..."
+          disabled={isLoading}
       
+        />
+        <button type="submit" disabled={isLoading} style={{ padding: '10px 20px' }}>
+          {isLoading ? 'Sending...' : 'Send'}
+        </button>
+      </form>
     </div>
   );
 }
