@@ -8,8 +8,8 @@ export default function Hero() {
 
       <div className="relative z-1 flex flex-col items-center justify-center gap-5">
         <h3 className="px-5 py-1 text-sm md:text-base rounded-full bg-gray-100 dark:bg-slate-800">
-          Powered by <span className="font-medium">Llama</span> and{" "}
-          <span className="font-medium">Langflow</span>
+          Powered by <span className="font-medium">Ollama</span> and{" "}
+          <span className="font-medium">GPT-OSS</span>
         </h3>
         <h1 className="text-4xl text-slate-900 md:text-6xl lg:text-7xl font-bold w-full md:max-w-4xl dark:text-white">
           Study and work abroad with the{" "}
