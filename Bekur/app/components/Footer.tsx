@@ -6,11 +6,11 @@ export default function Footer() {
       <p className="text-gray-800 dark:text-white">
         Powered by{" "}
         <span className="font-medium text-gray-900 dark:text-white">
-          Mistral
+          Ollama
         </span>{" "}
         and{" "}
         <span className="font-medium text-gray-900 dark:text-white">
-          Langflow
+          GPT-OSS
         </span>
       </p>
       <p>
