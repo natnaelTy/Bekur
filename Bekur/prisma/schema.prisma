@@ -14,16 +14,17 @@ datasource db {
 }
 
 model User {
-  id            String    @id @default(cuid())
-  email         String?   @unique
-  fullName      String?
-  phoneNumber   String?   @unique
-  emailVerified Boolean?  @default(false)
-  accounts      Account[]
-  sessions      Session[]
-  createdAt     DateTime  @default(now())
-  updatedAt     DateTime  @updatedAt
-  image         String?   @db.Text
+  id              String            @id @default(cuid())
+  email           String?           @unique
+  fullName        String?
+  phoneNumber     String?           @unique
+  emailVerified   Boolean?          @default(false)
+  accounts        Account[]
+  sessions        Session[]
+  createdAt       DateTime          @default(now())
+  updatedAt       DateTime          @updatedAt
+  image           String?           @db.Text
+  userApplication UserApplication[]
 
   @@map("User")
 }
@@ -80,4 +81,86 @@ model Verification {
   updatedAt  DateTime @default(now()) @updatedAt
 
   @@map("verification")
+}
+
+model UserApplication {
+  id            String            @id @default(cuid())
+  userId        String
+  user          User              @relation(fields: [userId], references: [id], onDelete: Cascade)
+  fullName      String
+  phoneNumber   String            @unique
+  email         String            @unique
+  dateOfBirth   DateTime
+  country       String
+  purpose       String
+  passport      String
+  transcriptImg String?           @db.Text
+  passportImg   String?           @db.Text
+  program       String?
+  score         Int?
+  appliedAt     DateTime?
+  reviewer      String?
+  notes         String?           @db.Text
+  createdAt     DateTime          @default(now())
+  updatedAt     DateTime          @default(now()) @updatedAt
+  status        ApplicationStatus @default(NOT_APPLIED)
+  progress      Int               @default(0)
+  university    String
+  payments   Payment[]
+  interviews Interview[]
+
+  @@map("userApplication")
+}
+
+enum ApplicationStatus {
+  NOT_APPLIED
+  APPLIED
+  INTERVIEW
+  OFFERED
+  REJECTED
+  ACCEPTED
+}
+
+enum PaymentStatus {
+  PENDING
+  COMPLETED
+  FAILED
+  REFUNDED
+}
+
+enum InterviewStatus {
+  SCHEDULED
+  COMPLETED
+  CANCELLED
+  NO_SHOW
+}
+
+model Payment {
+  id            String          @id @default(cuid())
+  applicationId String
+  application   UserApplication @relation(fields: [applicationId], references: [id], onDelete: Cascade)
+  amount        Float
+  currency      String          @default("ETB")
+  provider      String?
+  transactionId String?         @unique
+  status        PaymentStatus   @default(PENDING)
+  createdAt     DateTime        @default(now())
+  updatedAt     DateTime        @updatedAt
+
+  @@map("payment")
+}
+
+model Interview {
+  id            String          @id @default(cuid())
+  applicationId String
+  application   UserApplication @relation(fields: [applicationId], references: [id], onDelete: Cascade)
+  scheduledAt   DateTime
+  interviewer   String?
+  location      String?
+  status        InterviewStatus @default(SCHEDULED)
+  notes         String?         @db.Text
+  createdAt     DateTime        @default(now())
+  updatedAt     DateTime        @updatedAt
+
+  @@map("interview")
 }
