@@ -25,8 +25,13 @@ import { format } from "date-fns";
 import { getCountries } from "@/lib/Country";
 import Flag from "@/app/components/Flag";
 import { emoji } from "zod/v4";
+import axios from "axios";
+import { useParams } from "next/navigation";
+import { useSession } from "@/lib/auth-client";
+
 
 export default function ApplyPage() {
+  const params = useParams();
   const [formData, setFormData] = useState({
     fullName: "",
     email: "",
@@ -41,6 +46,8 @@ export default function ApplyPage() {
   const [countries, setCountries] = useState<any[]>([]);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [isApplied, setIsApplied] = useState(false);
+  const {data: session, isPending, error} = useSession();
+  const userId = session?.user?.id;
 
   const handleFileChange = (field: string, file: File | null) => {
     setFormData({ ...formData, [field]: file });
@@ -64,9 +71,18 @@ export default function ApplyPage() {
     setIsSubmitting(true);
 
     try {
-      await new Promise((r) => setTimeout(r, 1500));
+      const response = await axios.post(`/api/search/${userId}`, {
+        fullName: formData.fullName,
+        phoneNumber: formData.phone,
+        purpose: formData.purpose,
+        passport: formData.hasPassport,
+        country: formData.country,
+        dateOfBirth: formData.dateOfBirth ? formData.dateOfBirth.toISOString() : undefined,
+        email: formData.email,
+      });
+
+      toast.success("Application submitted successfully");
       setIsApplied(true);
-      toast.success("Application submitted successfully!");
     } catch (error) {
       toast.error("Failed to submit application");
     } finally {
@@ -74,6 +90,7 @@ export default function ApplyPage() {
     }
   };
 
+  console.log("User ID:", userId)
   if (isApplied) {
     return (
       <div className="min-h-screen flex flex-col items-center justify-center text-center dark:bg-gray-950 bg-gray-50 p-6">
@@ -201,7 +218,11 @@ export default function ApplyPage() {
                 </SelectTrigger>
                 <SelectContent className="dark:bg-gray-950">
                   {countries.map((country) => (
-                    <SelectItem className="hover:dark:bg-gray-900" key={country.id} value={country.name}>
+                    <SelectItem
+                      className="hover:dark:bg-gray-900"
+                      key={country.id}
+                      value={country.name}
+                    >
                       {Flag({ emoji: country.emoji })} {country.name}
                     </SelectItem>
                   ))}
@@ -222,9 +243,15 @@ export default function ApplyPage() {
                   <SelectValue placeholder="Select purpose" />
                 </SelectTrigger>
                 <SelectContent className="dark:bg-gray-950">
-                  <SelectItem className="hover:dark:bg-gray-900" value="study">Study</SelectItem>
-                  <SelectItem className="hover:dark:bg-gray-900" value="work">Work</SelectItem>
-                  <SelectItem className="hover:dark:bg-gray-900" value="event">Event</SelectItem>
+                  <SelectItem className="hover:dark:bg-gray-900" value="study">
+                    Study
+                  </SelectItem>
+                  <SelectItem className="hover:dark:bg-gray-900" value="work">
+                    Work
+                  </SelectItem>
+                  <SelectItem className="hover:dark:bg-gray-900" value="event">
+                    Event
+                  </SelectItem>
                 </SelectContent>
               </Select>
             </div>
@@ -242,8 +269,12 @@ export default function ApplyPage() {
                   <SelectValue placeholder="Select one" />
                 </SelectTrigger>
                 <SelectContent>
-                  <SelectItem className="hover:dark:bg-gray-900" value="yes">Yes</SelectItem>
-                  <SelectItem className="hover:dark:bg-gray-900" value="no">No</SelectItem>
+                  <SelectItem className="hover:dark:bg-gray-900" value="yes">
+                    Yes
+                  </SelectItem>
+                  <SelectItem className="hover:dark:bg-gray-900" value="no">
+                    No
+                  </SelectItem>
                 </SelectContent>
               </Select>
             </div>
