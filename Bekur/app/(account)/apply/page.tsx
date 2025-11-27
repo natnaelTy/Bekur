@@ -28,7 +28,7 @@ import { emoji } from "zod/v4";
 import axios from "axios";
 import { useParams } from "next/navigation";
 import { useSession } from "@/lib/auth-client";
-
+import { Spinner } from "@/components/ui/spinner";
 
 export default function ApplyPage() {
   const params = useParams();
@@ -46,7 +46,7 @@ export default function ApplyPage() {
   const [countries, setCountries] = useState<any[]>([]);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [isApplied, setIsApplied] = useState(false);
-  const {data: session, isPending, error} = useSession();
+  const { data: session, isPending, error } = useSession();
   const userId = session?.user?.id;
 
   const handleFileChange = (field: string, file: File | null) => {
@@ -77,7 +77,9 @@ export default function ApplyPage() {
         purpose: formData.purpose,
         passport: formData.hasPassport,
         country: formData.country,
-        dateOfBirth: formData.dateOfBirth ? formData.dateOfBirth.toISOString() : undefined,
+        dateOfBirth: formData.dateOfBirth
+          ? formData.dateOfBirth.toISOString()
+          : undefined,
         email: formData.email,
       });
 
@@ -90,7 +92,7 @@ export default function ApplyPage() {
     }
   };
 
-  console.log("User ID:", userId)
+  console.log("User ID:", userId);
   if (isApplied) {
     return (
       <div className="min-h-screen flex flex-col items-center justify-center text-center dark:bg-gray-950 bg-gray-50 p-6">
@@ -268,7 +270,7 @@ export default function ApplyPage() {
                 <SelectTrigger className="mt-2 bg-gray-50 dark:bg-gray-900/50 w-full">
                   <SelectValue placeholder="Select one" />
                 </SelectTrigger>
-                <SelectContent>
+                <SelectContent className="dark:bg-gray-950">
                   <SelectItem className="hover:dark:bg-gray-900" value="yes">
                     Yes
                   </SelectItem>
@@ -278,7 +280,7 @@ export default function ApplyPage() {
                 </SelectContent>
               </Select>
             </div>
-
+            
             {/* File Uploads */}
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               <div>
@@ -338,7 +340,8 @@ export default function ApplyPage() {
                 (isSubmitting && "  cursor-not-allowed")
               }
             >
-              {isSubmitting ? "Submitting..." : "Submit Application"}
+              {isSubmitting ? "" : "Submit Application"}
+              {isSubmitting && <Spinner aria-setsize={5} className="h-5 w-5" />}
             </Button>
           </form>
         </CardContent>
