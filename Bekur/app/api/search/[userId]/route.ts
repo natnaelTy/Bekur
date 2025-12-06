@@ -1,6 +1,8 @@
+export const dynamic = 'force-dynamic';
+export const fetchCache = 'force-no-store';
+
 import { findOpportunities } from "@/lib/langflow";
-import { NextResponse } from "next/server";
-import type { NextRequest } from "next/server";
+import { NextRequest, NextResponse } from "next/server";
 import { PrismaClient } from "@prisma/client";
 
 interface ApplicationData {
@@ -12,12 +14,16 @@ interface ApplicationData {
   dateOfBirth: string;
   email: string;
 }
+
 const prisma = new PrismaClient();
 
 export async function POST(
-  req: any,
+  req: NextRequest,
   { params }: { params: { userId: string } }
-) {
+): Promise<NextResponse> {
+
+  const { userId } = params;
+  
   const {
     fullName,
     phoneNumber,
@@ -31,9 +37,11 @@ export async function POST(
     university,
   } = await req.json();
 
-  const userId = await params.userId;
   if (!userId) {
-    return NextResponse.json({ error: "Missing userId in route" }, { status: 400 });
+    return NextResponse.json(
+      { error: "Missing userId in route" },
+      { status: 400 }
+    );
   }
 
   try {
@@ -46,11 +54,16 @@ export async function POST(
       !dateOfBirth ||
       !email
     ) {
-      return NextResponse.json({ message: "All fields are required" }, { status: 400 });
+      return NextResponse.json(
+        { message: "All fields are required" },
+        { status: 400 }
+      );
     }
 
     // Ensure the referenced User exists before attempting nested connect
-    const existingUser = await prisma.user.findUnique({ where: { id: userId } });
+    const existingUser = await prisma.user.findUnique({
+      where: { id: userId },
+    });
     if (!existingUser) {
       console.error("User not found for id:", userId);
       return NextResponse.json({ error: "User not found" }, { status: 404 });
@@ -67,7 +80,6 @@ export async function POST(
         country,
         purpose,
         passport,
-        // optional fields:
         program,
         notes,
       },
