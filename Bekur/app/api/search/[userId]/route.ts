@@ -1,9 +1,10 @@
-export const dynamic = 'force-dynamic';
-export const fetchCache = 'force-no-store';
+export const dynamic = "force-dynamic";
+export const fetchCache = "force-no-store";
 
 import { findOpportunities } from "@/lib/langflow";
 import { NextRequest, NextResponse } from "next/server";
-import { PrismaClient } from "@prisma/client";
+import { prisma } from "@/prisma/prismaClient";
+
 
 interface ApplicationData {
   fullName: string;
@@ -15,15 +16,12 @@ interface ApplicationData {
   email: string;
 }
 
-const prisma = new PrismaClient();
-
 export async function POST(
   req: NextRequest,
-  { params }: { params: { userId: string } }
+  { params }: { params: Promise<{ userId: string }> }
 ): Promise<NextResponse> {
+  const { userId } = await params;
 
-  const { userId } = params;
-  
   const {
     fullName,
     phoneNumber,
