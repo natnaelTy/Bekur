@@ -1,45 +1,41 @@
-# Stage 1: Build dependencies and create the production build
+# ---- Builder ----
 FROM node:20-alpine AS builder
-
-# Set the working directory
 WORKDIR /app
 
-# Copy package files to install dependencies
+# Install dependencies (including prisma)
 COPY package.json package-lock.json ./
-
-# Install dependencies
 RUN npm ci
 
-# Copy the rest of the application code
+# Copy Prisma schema
+COPY prisma ./prisma/
+
+# Generate Prisma Client (critical!)
+RUN npx prisma generate
+
+# Now copy the rest of the source code
 COPY . .
 
-# IMPORTANT: Configure Next.js to use the 'standalone' output
-# Add 'output: "standalone"' to your next.config.js file before building
+# Build Next.js
+ENV NODE_ENV=production
 RUN npm run build
 
-# --- Stage 2: Production Runner ---
+# ---- Runner ----
 FROM node:20-alpine AS runner
-
-# Set environment to production
-ENV NODE_ENV=production
-
-# Next.js recommends generating a standalone folder.
-# We copy only the files necessary for production runtime.
-# This results in the smallest possible image.
 WORKDIR /app
 
-# Create a non-root user for security
 RUN addgroup --system --gid 1001 nodejs
 RUN adduser --system --uid 1001 nextjs
+
+# Copy only what's needed from builder
+COPY --from=builder /app/.next/standalone ./
+COPY --from=builder /app/.next/static ./.next/static
+COPY --from=builder /app/public ./public
+# (optional) copy Prisma files if you use prisma in server-only code
+COPY --from=builder /app/prisma ./prisma
+COPY --from=builder /app/node_modules/.prisma ./node_modules/.prisma
+
 USER nextjs
-
-# Copy the standalone output and public assets from the builder stage
-COPY --from=builder --chown=nextjs:nodejs /app/.next/standalone ./
-COPY --from=builder --chown=nextjs:nodejs /app/.next/static ./.next/static
-COPY --from=builder --chown=nextjs:nodejs /app/public ./public
-
-# Expose the default port Next.js runs on
 EXPOSE 3000
+ENV PORT=3000
 
-# Start the Next.js production server
 CMD ["node", "server.js"]
