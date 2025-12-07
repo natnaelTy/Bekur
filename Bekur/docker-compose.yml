@@ -1,0 +1,50 @@
+
+
+services:
+  # 1. Next.js Web Application Service
+  web:
+    # Use the Dockerfile we created earlier to build this service
+    build: 
+      context: . 
+      dockerfile: Dockerfile
+    # Map host port 3000 to container port 3000
+    ports:
+      - "3000:3000"
+    # Mount local directories (useful for development, but optional for production)
+    # volumes:
+    #   - .:/app
+    #   - /app/node_modules # Avoid overwriting the container's node_modules with the host's
+    
+    # Environment variables for your Next.js app
+    environment:
+      # This is the key: use the service name ('db') as the hostname!
+      DATABASE_URL: postgresql://nati8:nati0975329588@babi@db:5432/bekur
+      # Set up other variables (e.g., secrets, API keys)
+      NODE_ENV: production
+    
+    # Ensure the web service starts only after the database is ready
+    depends_on:
+      - db
+
+  # 2. PostgreSQL Database Service
+  db:
+    # Use the official PostgreSQL image from Docker Hub
+    image: postgres:16-alpine
+    # Map the container port (5432) to the host (optional, but helpful for debugging)
+    ports:
+      - "5432:5432"
+    # Persistent storage so your data isn't lost when the container stops
+    volumes:
+      - postgres_data:/var/lib/postgresql/data/
+    
+    # Database connection environment variables
+    environment:
+      POSTGRES_USER: nati8
+      POSTGRES_PASSWORD: nati0975329588@babi
+      POSTGRES_DB: bekur
+      # Prevents database from running as root (good practice)
+      POSTGRES_INITDB_ARGS: "--auth-host=scram-sha-256"
+
+# Define the persistent volume
+volumes:
+  postgres_data:
