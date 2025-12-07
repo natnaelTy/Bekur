@@ -90,7 +90,7 @@ export default function SettingsPage() {
                     <div className="flex items-center gap-4">
                       <Avatar className="w-16 h-16">
                         <AvatarImage
-                          src={user?.image}
+                          src={user?.image || ""}
                           alt={user?.name || "User"}
                         />
                         <AvatarFallback>
