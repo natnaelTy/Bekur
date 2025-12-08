@@ -2,23 +2,19 @@
 FROM node:20-alpine AS builder
 WORKDIR /app
 
-# Install dependencies (including prisma)
+# 1. Copy package files
 COPY package.json package-lock.json ./
-RUN npm ci
 
-# Copy Prisma schema
+# 2. Copy prisma folder FIRST (schema + config)
 COPY prisma ./prisma/
 
-# Generate Prisma Client (critical!)
-RUN npx prisma generate
+# 3. Now install deps → postinstall can find schema.prisma
+RUN npm ci
 
-# Now copy the rest of the source code
 COPY . .
 
-# Build Next.js
 ENV NODE_ENV=production
 RUN npm run build
-
 # ---- Runner ----
 FROM node:20-alpine AS runner
 WORKDIR /app
@@ -30,9 +26,12 @@ RUN adduser --system --uid 1001 nextjs
 COPY --from=builder /app/.next/standalone ./
 COPY --from=builder /app/.next/static ./.next/static
 COPY --from=builder /app/public ./public
-# (optional) copy Prisma files if you use prisma in server-only code
+# Copy Prisma files (including config.ts for runtime if needed)
 COPY --from=builder /app/prisma ./prisma
 COPY --from=builder /app/node_modules/.prisma ./node_modules/.prisma
+# Add: Copy package.json/node_modules if you use Prisma in server code
+COPY --from=builder /app/node_modules ./node_modules
+COPY --from=builder /app/package.json ./package.json
 
 USER nextjs
 EXPOSE 3000
