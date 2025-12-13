@@ -5,15 +5,20 @@ WORKDIR /app
 # 1. Copy package files
 COPY package.json package-lock.json ./
 
-# 2. Copy prisma folder FIRST (schema + config)
-COPY prisma ./prisma/
+RUN npm ci --ignore-scripts
 
-# 3. Now install deps → postinstall can find schema.prisma
-RUN npm ci
+# 2. Copy prisma folder FIRST (schema + config)
+COPY prisma ./prisma
+COPY prisma.config.ts ./
+
 
 COPY . .
 
 ENV NODE_ENV=production
+
+ARG DATABASE_URL
+ENV DATABASE_URL=$DATABASE_URL
+
 RUN npm run build
 # ---- Runner ----
 FROM node:20-alpine AS runner
