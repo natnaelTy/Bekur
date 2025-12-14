@@ -124,7 +124,6 @@ export default function ApplyPage() {
             Fill in your details carefully — you can only apply once.
           </p>
         </CardHeader>
-        <div></div>
         <CardContent>
           <form onSubmit={handleSubmit} className="space-y-6">
             {/* Personal Info */}
