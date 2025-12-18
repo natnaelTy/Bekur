@@ -16,9 +16,9 @@ services:
     environment:
       DATABASE_URL: postgresql://nati8:nati0975329588%40babi@db:5432/bekur
       NODE_ENV: development
-      LANGFLOW_BASE_URL: http://host.docker.internal:7860
-      LANGFLOW_API_KEY:  sk-lPlr6J9otITy8CyVo0UROOMgMz3PCQKK4tB4O-WUHXI
-      LANGFLOW_FLOW_ID: e7d0786f-6d5b-4e80-b654-ae8e2bbb2a67
+      LANGFLOW_BASE_URL: ${LANGFLOW_BASE_URL}
+      LANGFLOW_API_KEY: ${LANGFLOW_API_KEY}
+      LANGFLOW_FLOW_ID: ${LANGFLOW_FLOW_ID}
     volumes:
       - .:/app
       - /app/node_modules
