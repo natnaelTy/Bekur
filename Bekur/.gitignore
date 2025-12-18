@@ -43,3 +43,7 @@ next-env.d.ts
 /lib/generated/prisma
 
 /generated/prisma
+
+docker-compose.yml
+
+.dockerignore
