@@ -45,7 +45,7 @@ next-env.d.ts
 /generated/prisma
 
 #
-sDocker
-docker-compose.yml
+/Docker
+/docker-compose.yml
 
-.dockerignore
+/.dockerignore
