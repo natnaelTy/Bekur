@@ -165,3 +165,19 @@ model Interview {
 
   @@map("interview")
 }
+
+model Scholarship {
+  id            String   @id @default(uuid())
+  title         String
+  provider      String?
+  country       String
+  level         String
+  field         String?
+  deadline      DateTime?
+  benefits      String?
+  eligibility   String
+  documents     String
+  applicationUrl String
+  sourceUrl     String   @unique
+  createdAt     DateTime @default(now())
+}
