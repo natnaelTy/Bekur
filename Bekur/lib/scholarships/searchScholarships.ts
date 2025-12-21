@@ -1,9 +1,10 @@
+
+
 export async function searchScholarships(params: {
   country: string;
   level: string;
-  field: string;
 }) {
-  const query = `${params.country} ${params.level} ${params.field} scholarship official site`;
+  const query = `${params.country} ${params.level} scholarship official site`;
 
   const res = await fetch("https://google.serper.dev/search", {
     method: "POST",
@@ -18,9 +19,12 @@ export async function searchScholarships(params: {
   });
 
   const data = await res.json();
-
+ console.log("searchScholarships data", data);
+ 
   return data.organic.map((item: any) => ({
     title: item.title,
     url: item.link,
+    snippet: item.snippet,
+    "position": item.position
   }));
 }
