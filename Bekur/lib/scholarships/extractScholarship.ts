@@ -1,27 +1,26 @@
+import { LangflowClient } from "@datastax/langflow-client";
 
+const client = new LangflowClient({
+  baseUrl: "http://localhost:7860",
+  apiKey: process.env.LANGFLOW_API_KEY_FINDER!, 
+});
 
 export async function extractScholarship(text: string) {
-  const prompt = `
-Extract scholarship info as JSON.
-Fields:
-title, country, level, deadline, eligibility, documents, applicationUrl
+  if (!text || text.trim().length === 0) {
+    throw new Error("extractScholarship received empty text");
+  }
 
-Text:
-${text.slice(0, 12000)}
-`;
+  const flow = client.flow(process.env.LANGFLOW_FLOW_ID_FINDER!);
 
-  const res = await fetch(process.env.AI_ENDPOINT!, {
-    method: "POST",
-    headers: {
-      Authorization: `Bearer ${process.env.AI_API_KEY}`,
-      "Content-Type": "application/json",
-    },
-    body: JSON.stringify({
-      model: "gpt-4o-mini",
-      messages: [{ role: "user", content: prompt }],
-    }),
-  });
+  console.log("Sending to Langflow:", text.slice(0, 200));
 
-  const data = await res.json();
-  return JSON.parse(data.choices[0].message.content);
+  const res = await flow.run(text);
+
+  const output = res.chatOutputText();
+
+  if (!output) {
+    throw new Error("No output from Langflow");
+  }
+
+  return JSON.parse(output);
 }
