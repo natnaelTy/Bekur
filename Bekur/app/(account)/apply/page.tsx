@@ -40,9 +40,11 @@ export default function ApplyPage() {
     dateOfBirth: undefined as Date | undefined,
     purpose: "",
     hasPassport: "",
-    transcript: null as File | null,
-    photo: null as File | null,
   });
+
+  const [recommendations, setRecommendations] = useState<any[]>([]);
+  const [loadingRecommendations, setLoadingRecommendations] = useState(false);
+
   const [countries, setCountries] = useState<any[]>([]);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [isApplied, setIsApplied] = useState(false);
@@ -66,52 +68,45 @@ export default function ApplyPage() {
     <span className="text-lg">{emoji}</span>
   );
 
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
-    setIsSubmitting(true);
+  const fetchRecommendations = async () => {
+    setLoadingRecommendations(true);
 
-    try {
-      const response = await axios.post(`/api/search/${userId}`, {
-        fullName: formData.fullName,
-        phoneNumber: formData.phone,
-        purpose: formData.purpose,
-        passport: formData.hasPassport,
-        country: formData.country,
-        dateOfBirth: formData.dateOfBirth
-          ? formData.dateOfBirth.toISOString()
-          : undefined,
-        email: formData.email,
-      });
+    const res = await fetch(
+      "http://localhost:3000/api/admin/recommend-scholarships",
+      {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(formData),
+      }
+    );
 
-      toast.success("Application submitted successfully");
-      setIsApplied(true);
-    } catch (error) {
-      toast.error("Failed to submit application");
-    } finally {
-      setIsSubmitting(false);
-    }
+    const data = await res.json();
+
+    setRecommendations(data.recommendations);
+    setLoadingRecommendations(false);
   };
 
-  console.log("User ID:", userId);
-  if (isApplied) {
-    return (
-      <div className="min-h-screen flex flex-col items-center justify-center text-center dark:bg-gray-950 bg-gray-50 p-6">
-        <h2 className="text-3xl font-semibold text-green-500 mb-4">
-          🎉 Application Submitted!
-        </h2>
-        <p className="text-gray-600 dark:text-gray-300 max-w-md">
-          Thank you for applying. You’ll receive updates once your application
-          is reviewed. You can track your progress on your dashboard.
-        </p>
-        <Button
-          className="mt-6"
-          onClick={() => (window.location.href = "/dashboard")}
-        >
-          Go to Dashboard
-        </Button>
-      </div>
+  const submitApplication = async () => {
+    await fetch("/api/apply", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(formData),
+    });
+
+    alert("Application submitted successfully!");
+  };
+
+  // loading state
+  {
+    loadingRecommendations && (
+      <p className="text-sm text-gray-500">
+        Finding best scholarships for you...
+      </p>
     );
   }
+
+  console.log(recommendations);
+  //  recommendations
 
   return (
     <div className="min-h-screen bg-gray-50 dark:bg-gray-950 py-10 px-3 flex justify-center py-26 relative overflow-hidden">
@@ -125,9 +120,9 @@ export default function ApplyPage() {
           </p>
         </CardHeader>
         <CardContent>
-          <form onSubmit={handleSubmit} className="space-y-6">
+          <form onSubmit={fetchRecommendations} className="space-y-6">
             {/* Personal Info */}
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">r
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               <div>
                 <Label>Full Name</Label>
                 <Input
@@ -279,8 +274,8 @@ export default function ApplyPage() {
                 </SelectContent>
               </Select>
             </div>
-            
-            {/* File Uploads */}
+
+            {/*            
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               <div>
                 <Label>Upload Transcript</Label>
@@ -328,21 +323,14 @@ export default function ApplyPage() {
                   />
                 </label>
               </div>
-            </div>
-
-            <Button
-              type="submit"
-              onClick={handleSubmit}
-              disabled={isSubmitting}
-              className={
-                `w-full font-semibold text-white dark:bg-white dark:text-gray-900 dark:hover:bg-gray-200 rounded-full` +
-                (isSubmitting && "  cursor-not-allowed")
-              }
-            >
-              {isSubmitting ? "" : "Submit Application"}
-              {isSubmitting && <Spinner aria-setsize={5} className="h-5 w-5" />}
-            </Button>
+            </div> */}
           </form>
+          <button
+            onClick={fetchRecommendations}
+            className="bg-blue-600 text-white px-4 py-2 rounded-full hover:bg-blue-700 transition"
+          >
+            Find Scholarships for Me
+          </button>
         </CardContent>
       </Card>
       <div
@@ -366,6 +354,45 @@ export default function ApplyPage() {
         }}
         className="absolute top-0 right-0 w-[600px] h-[400px] rounded-full blur-3xl opacity-80 dark:hidden"
       ></div>
+      {/* Recommended Scholarships */}
+      {recommendations.length > 0 && (
+        <div className="mt-6 border-t pt-4 absolute top-0 right-0 w-full max-w-3xl z-10 bg-white dark:bg-gray-950 p-6 shadow-lg">
+          <h3 className="text-lg font-semibold mb-3">
+            Recommended Scholarships
+          </h3>
+
+          <div className="space-y-3">
+            {recommendations.map((scholarship) => (
+              <label
+                key={scholarship.id}
+                className="flex items-start gap-3 p-3 border rounded cursor-pointer hover:bg-gray-50"
+              >
+                <input
+                  type="radio"
+                  name="selectedScholarship"
+                  value={scholarship.id}
+                  onChange={() =>
+                    setFormData((prev) => ({
+                      ...prev,
+                      selectedScholarshipId: scholarship.id,
+                    }))
+                  }
+                />
+
+                <div>
+                  <p className="font-medium">{scholarship.title}</p>
+                  <p className="text-sm text-gray-600">
+                    {scholarship.provider}
+                  </p>
+                  <p className="text-xs text-gray-500">
+                    Deadline: {scholarship.deadline || "Not specified"}
+                  </p>
+                </div>
+              </label>
+            ))}
+          </div>
+        </div>
+      )}
     </div>
   );
 }
