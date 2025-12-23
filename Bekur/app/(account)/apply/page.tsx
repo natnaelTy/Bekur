@@ -29,6 +29,16 @@ import axios from "axios";
 import { useParams } from "next/navigation";
 import { useSession } from "@/lib/auth-client";
 import { Spinner } from "@/components/ui/spinner";
+import {
+  Drawer,
+  DrawerClose,
+  DrawerContent,
+  DrawerDescription,
+  DrawerFooter,
+  DrawerHeader,
+  DrawerTitle,
+  DrawerTrigger,
+} from "@/components/ui/drawer";
 
 export default function ApplyPage() {
   const params = useParams();
@@ -105,12 +115,9 @@ export default function ApplyPage() {
     );
   }
 
-  console.log(recommendations);
-  //  recommendations
-
   return (
     <div className="min-h-screen bg-gray-50 dark:bg-gray-950 py-10 px-3 flex justify-center py-26 relative overflow-hidden">
-      <Card className="max-w-3xl w-full z-1 bg-white dark:bg-gray-950 shadow-xl border border-gray-200 dark:border-gray-800">
+      <Card className="max-w-xl w-full z-1 bg-white dark:bg-gray-950 rounded-md border border-gray-100 dark:border-gray-900">
         <CardHeader>
           <CardTitle className="text-2xl font-bold text-gray-900 dark:text-white">
             🎓 Apply for Scholarship / Event
@@ -327,12 +334,89 @@ export default function ApplyPage() {
           </form>
           <button
             onClick={fetchRecommendations}
-            className="bg-blue-600 text-white px-4 py-2 rounded-full hover:bg-blue-700 transition"
+            className="mt-4 bg-blue-600 text-white px-4 py-2 rounded-full hover:bg-blue-700 transition"
           >
             Find Scholarships for Me
           </button>
         </CardContent>
       </Card>
+
+      {/* Recommendations Drawer */}
+      <Drawer
+        direction="right"
+        open={recommendations.length > 0}
+        onOpenChange={(open) => {
+          if (!open) setRecommendations([]);
+        }}
+      >
+        <DrawerContent className="bg-gray-50 dark:bg-gray-950">
+          <DrawerHeader>
+            <DrawerTitle>Recommended Scholarships</DrawerTitle>
+            <DrawerDescription>Select one to continue.</DrawerDescription>
+          </DrawerHeader>
+          <div className="no-scrollbar overflow-y-auto px-4">
+            <div className="space-y-3 flex flex-col mb-10">
+              {recommendations.map((scholarship) => (
+                <label
+                  key={scholarship.id}
+                  className="flex flex-col items-start gap-3 p-3 border rounded cursor-pointer hover:bg-gray-100 dark:hover:bg-gray-900"
+                >
+                  <input
+                    type="radio"
+                    name="selectedScholarship"
+                    value={scholarship.id}
+                    onChange={() =>
+                      setFormData((prev) => ({
+                        ...prev,
+                        selectedScholarshipId: scholarship.id,
+                      }))
+                    }
+                  />
+
+                  <div>
+                    <p className="font-medium">{scholarship.title}</p>
+                    <p className="text-sm text-gray-600">
+                      {scholarship.provider}
+                    </p>
+                    <p className="text-xs text-gray-500">
+                      Deadline: {scholarship.deadline || "Not specified"}
+                    </p>
+                  </div>
+
+                        <div className="flex items-center">
+                    <p className="text-sm text-gray-600">
+                      Match Score: <b>{scholarship.score}%</b>
+                    </p>
+
+                    {scholarship.score >= 80 && (
+                      <span className="text-green-600 text-xs">
+                        High chance of acceptance
+                      </span>
+                    )}
+
+                    {scholarship.score >= 60 && scholarship.score < 80 && (
+                      <span className="text-yellow-600 text-xs">
+                        Medium chance
+                      </span>
+                    )}
+
+                    {scholarship.score < 60 && (
+                      <span className="text-red-600 text-xs">Low chance</span>
+                    )}
+                  </div>
+                </label>
+              ))}
+            </div>
+          </div>
+          <DrawerFooter>
+            <DrawerClose asChild>
+              <Button variant="outline">Close</Button>
+            </DrawerClose>
+          </DrawerFooter>
+        </DrawerContent>
+      </Drawer>
+
+      {/* Background Effects */}
       <div
         style={{
           background:
@@ -354,45 +438,6 @@ export default function ApplyPage() {
         }}
         className="absolute top-0 right-0 w-[600px] h-[400px] rounded-full blur-3xl opacity-80 dark:hidden"
       ></div>
-      {/* Recommended Scholarships */}
-      {recommendations.length > 0 && (
-        <div className="mt-6 border-t pt-4 absolute top-0 right-0 w-full max-w-3xl z-10 bg-white dark:bg-gray-950 p-6 shadow-lg">
-          <h3 className="text-lg font-semibold mb-3">
-            Recommended Scholarships
-          </h3>
-
-          <div className="space-y-3">
-            {recommendations.map((scholarship) => (
-              <label
-                key={scholarship.id}
-                className="flex items-start gap-3 p-3 border rounded cursor-pointer hover:bg-gray-50"
-              >
-                <input
-                  type="radio"
-                  name="selectedScholarship"
-                  value={scholarship.id}
-                  onChange={() =>
-                    setFormData((prev) => ({
-                      ...prev,
-                      selectedScholarshipId: scholarship.id,
-                    }))
-                  }
-                />
-
-                <div>
-                  <p className="font-medium">{scholarship.title}</p>
-                  <p className="text-sm text-gray-600">
-                    {scholarship.provider}
-                  </p>
-                  <p className="text-xs text-gray-500">
-                    Deadline: {scholarship.deadline || "Not specified"}
-                  </p>
-                </div>
-              </label>
-            ))}
-          </div>
-        </div>
-      )}
     </div>
   );
 }
