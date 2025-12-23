@@ -7,19 +7,22 @@ export async function POST(req: Request) {
   const studentProfile = {
     fullName: body.fullName,
     email: body.email,
-    country: body.country,
-    level: body.purpose === "study" ? "bachelor" : "master",
+    country_applying_to: body.country,
+    level: (body.purpose === "study" ? "bachelor" : "master") as "bachelor" | "master" | "phd",
     field: body.field || "general",
     hasPassport: body.hasPassport === "yes",
   };
 
-  const scholarships = await prisma.scholarship.findMany();
+  const scholarships = (await prisma.scholarship.findMany()).map((s) => ({
+    ...s,
+    country: s.country ?? "",
+  })) as any;
 
-  const recommended = recommendScholarships(scholarships, studentProfile);
-  console.log(recommended);
-  
+  const result = recommendScholarships(scholarships, studentProfile);
+
   return Response.json({
     student: studentProfile,
-    recommendations: recommended.slice(0, 5), 
+    message: result.message,
+    recommendations: result.data.slice(0, 5),
   });
 }
