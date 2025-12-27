@@ -2,23 +2,26 @@ import { prisma } from "@/lib/prisma";
 import { recommendScholarships } from "@/lib/scholarships/matching/recommendScholarships";
 
 export async function POST(req: Request) {
-  const body = await req.json();
+  const data = await req.json();
+
+  console.log("Received student data:", data);
 
   const studentProfile = {
-    fullName: body.fullName,
-    email: body.email,
-    country_applying_to: body.country,
-    level: (body.purpose === "study" ? "bachelor" : "master") as "bachelor" | "master" | "phd",
-    field: body.field || "general",
-    hasPassport: body.hasPassport === "yes",
+    fullName: data.fullName,
+    email: data.email,
+    country_applying_to: data.country,
+    level: (data.purpose === "study" ? "bachelor" : "master") as "bachelor" | "master" | "phd",
+    field: data.field || "general",
+    hasPassport: data.hasPassport === "yes",
   };
-
+  console.log(studentProfile)
   const scholarships = (await prisma.scholarship.findMany()).map((s) => ({
     ...s,
     country: s.country ?? "",
   })) as any;
 
   const result = recommendScholarships(scholarships, studentProfile);
+
 
   return Response.json({
     student: studentProfile,
