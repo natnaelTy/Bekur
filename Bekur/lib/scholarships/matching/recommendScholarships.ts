@@ -18,7 +18,7 @@ export function recommendScholarships(
     console.log("Matched Scholarships:", matched);
   if (matched.length === 0) {
     return {
-      message: "No scholarship found in your desired country",
+      message: "No scholarship found, please try selecting another country",
       data: [],
     };
   }
