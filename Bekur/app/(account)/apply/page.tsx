@@ -39,19 +39,22 @@ import {
   DrawerTitle,
   DrawerTrigger,
 } from "@/components/ui/drawer";
+import { useForm } from "react-hook-form";
+import { z } from "zod";
+import { zodResolver } from "@hookform/resolvers/zod";
+
+const ApplicationSchema = z.object({
+  fullName: z.string().min(2, "Full name is required"),
+  email: z.string().email("Invalid email address"),
+  phone: z.string().min(9, "Phone number is required"),
+  country: z.string().min(2, "Country is required"),
+  dateOfBirth: z.date().optional(),
+  hasPassport: z.enum(["yes", "no"] as const),
+});
+
+type ApplicationData = z.infer<typeof ApplicationSchema>;
 
 export default function ApplyPage() {
-  const params = useParams();
-  const [formData, setFormData] = useState({
-    fullName: "",
-    email: "",
-    phone: "",
-    country: "",
-    dateOfBirth: undefined as Date | undefined,
-    purpose: "",
-    hasPassport: "",
-  });
-
   const [recommendations, setRecommendations] = useState<any[]>([]);
   const [loadingRecommendations, setLoadingRecommendations] = useState(false);
 
@@ -60,10 +63,6 @@ export default function ApplyPage() {
   const [isApplied, setIsApplied] = useState(false);
   const { data: session, isPending, error } = useSession();
   const userId = session?.user?.id;
-
-  const handleFileChange = (field: string, file: File | null) => {
-    setFormData({ ...formData, [field]: file });
-  };
 
   // fetch countries
   useEffect(() => {
@@ -78,29 +77,44 @@ export default function ApplyPage() {
     <span className="text-lg">{emoji}</span>
   );
 
-  const fetchRecommendations = async () => {
+  const {
+    register,
+    handleSubmit,
+    setValue,
+    watch,
+    formState: { errors },
+  } = useForm<ApplicationData>({
+    resolver: zodResolver(ApplicationSchema),
+  });
+
+  const fetchRecommendations = async (data: ApplicationData) => {
     setLoadingRecommendations(true);
+    const validation = ApplicationSchema.safeParse(data);
 
     const res = await fetch(
       "http://localhost:3000/api/admin/recommend-scholarships",
       {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(formData),
+        body: JSON.stringify(validation.data),
       }
     );
 
-    const data = await res.json();
+    const result = await res.json();
 
-    setRecommendations(data.recommendations);
+    setRecommendations(result.recommendations);
+
+    if (result.recommendations.length === 0) {
+      toast.info(result.message);
+    }
     setLoadingRecommendations(false);
   };
 
-  const submitApplication = async () => {
+  const submitApplication = async (data: ApplicationData) => {
     await fetch("/api/apply", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify(formData),
+      body: JSON.stringify(data),
     });
 
     alert("Application submitted successfully!");
@@ -120,39 +134,42 @@ export default function ApplyPage() {
       <Card className="max-w-xl w-full z-1 bg-white dark:bg-gray-950 rounded-md border border-gray-100 dark:border-gray-900">
         <CardHeader>
           <CardTitle className="text-2xl font-bold text-gray-900 dark:text-white">
-            🎓 Apply for Scholarship / Event
+            Apply for Scholarship
           </CardTitle>
           <p className="text-gray-600 dark:text-gray-400 text-sm md:text-base mt-1">
             Fill in your details carefully — you can only apply once.
           </p>
         </CardHeader>
         <CardContent>
-          <form onSubmit={fetchRecommendations} className="space-y-6">
+          <form
+            onSubmit={handleSubmit(fetchRecommendations)}
+            className="space-y-6"
+          >
             {/* Personal Info */}
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               <div>
                 <Label>Full Name</Label>
                 <Input
                   type="text"
-                  value={formData.fullName}
-                  onChange={(e) =>
-                    setFormData({ ...formData, fullName: e.target.value })
-                  }
-                  required
+                  {...register("fullName")}
                   className="mt-2 bg-gray-50 dark:bg-gray-900/50"
                 />
+                {errors.fullName && (
+                  <p className="text-sm text-red-600 mt-1">
+                    {errors.fullName.message}
+                  </p>
+                )}
               </div>
               <div>
                 <Label>Email</Label>
                 <Input
                   type="email"
-                  value={formData.email}
-                  onChange={(e) =>
-                    setFormData({ ...formData, email: e.target.value })
-                  }
-                  required
+                  {...register("email")}
                   className="mt-2 bg-gray-50 dark:bg-gray-900/50"
                 />
+                {errors.email && (
+                  <p className="text-red-600">{errors.email.message}</p>
+                )}
               </div>
             </div>
 
@@ -161,13 +178,13 @@ export default function ApplyPage() {
                 <Label>Phone Number</Label>
                 <Input
                   type="tel"
-                  value={formData.phone}
-                  onChange={(e) =>
-                    setFormData({ ...formData, phone: e.target.value })
-                  }
+                  {...register("phone")}
                   required
                   className="mt-2 bg-gray-50 dark:bg-gray-900/50"
                 />
+                {errors.phone && (
+                  <p className="text-red-600">{errors.phone.message}</p>
+                )}
               </div>
 
               {/* Birthday Date */}
@@ -181,41 +198,34 @@ export default function ApplyPage() {
                     <Button
                       variant={"outline"}
                       className={cn(
-                        "w-full justify-start text-left font-normal",
-                        !formData.dateOfBirth && "text-muted-foreground"
+                        "w-full justify-start text-left font-normal"
                       )}
                     >
                       <CalendarIcon className="mr-2 h-4 w-4" />
-                      {formData.dateOfBirth ? (
-                        format(formData.dateOfBirth, "PPP")
-                      ) : (
-                        <span>Select your birthday</span>
-                      )}
+                      {watch("dateOfBirth")
+                        ? format(watch("dateOfBirth") as Date, "PPP")
+                        : "Select date of birth"}
                     </Button>
                   </PopoverTrigger>
                   <PopoverContent className="w-auto p-0 bg-white dark:bg-gray-950">
                     <Calendar
                       mode="single"
-                      selected={formData.dateOfBirth}
-                      onSelect={(date: any) =>
-                        setFormData({ ...formData, dateOfBirth: date })
-                      }
+                      selected={watch("dateOfBirth")}
+                      onSelect={(date) => setValue("dateOfBirth", date)}
                       captionLayout="dropdown"
                     />
                   </PopoverContent>
                 </Popover>
+                {errors.dateOfBirth && (
+                  <p className="text-red-600">{errors.dateOfBirth.message}</p>
+                )}
               </div>
             </div>
 
             {/* Country */}
             <div>
               <Label>Country Applying To</Label>
-              <Select
-                value={formData.country}
-                onValueChange={(val) =>
-                  setFormData({ ...formData, country: val })
-                }
-              >
+              <Select onValueChange={(val) => setValue("country", val)}>
                 <SelectTrigger className="mt-2 bg-gray-50 dark:bg-gray-900/50 w-full">
                   <SelectValue placeholder="Select a country" />
                 </SelectTrigger>
@@ -231,41 +241,17 @@ export default function ApplyPage() {
                   ))}
                 </SelectContent>
               </Select>
-            </div>
-
-            {/* Purpose */}
-            <div>
-              <Label>Purpose of Applying</Label>
-              <Select
-                value={formData.purpose}
-                onValueChange={(val) =>
-                  setFormData({ ...formData, purpose: val })
-                }
-              >
-                <SelectTrigger className="mt-2 bg-gray-50 dark:bg-gray-900/50 w-full">
-                  <SelectValue placeholder="Select purpose" />
-                </SelectTrigger>
-                <SelectContent className="dark:bg-gray-950">
-                  <SelectItem className="hover:dark:bg-gray-900" value="study">
-                    Study
-                  </SelectItem>
-                  <SelectItem className="hover:dark:bg-gray-900" value="work">
-                    Work
-                  </SelectItem>
-                  <SelectItem className="hover:dark:bg-gray-900" value="event">
-                    Event
-                  </SelectItem>
-                </SelectContent>
-              </Select>
+              {errors.country && (
+                <p className="text-red-500 text-sm">{errors.country.message}</p>
+              )}
             </div>
 
             {/* Passport */}
             <div>
               <Label>Do you have a passport?</Label>
               <Select
-                value={formData.hasPassport}
                 onValueChange={(val) =>
-                  setFormData({ ...formData, hasPassport: val })
+                  setValue("hasPassport", val as "yes" | "no")
                 }
               >
                 <SelectTrigger className="mt-2 bg-gray-50 dark:bg-gray-900/50 w-full">
@@ -280,6 +266,11 @@ export default function ApplyPage() {
                   </SelectItem>
                 </SelectContent>
               </Select>
+              {errors.hasPassport && (
+                <p className="text-red-500 text-sm">
+                  {errors.hasPassport.message}
+                </p>
+              )}
             </div>
 
             {/*            
@@ -333,7 +324,7 @@ export default function ApplyPage() {
             </div> */}
           </form>
           <button
-            onClick={fetchRecommendations}
+            onClick={handleSubmit(fetchRecommendations)}
             className="mt-4 bg-blue-600 text-white px-4 py-2 rounded-full hover:bg-blue-700 transition"
           >
             Find Scholarships for Me
@@ -365,12 +356,7 @@ export default function ApplyPage() {
                     type="radio"
                     name="selectedScholarship"
                     value={scholarship.id}
-                    onChange={() =>
-                      setFormData((prev) => ({
-                        ...prev,
-                        selectedScholarshipId: scholarship.id,
-                      }))
-                    }
+                    className="accent-blue-600"
                   />
 
                   <div>
@@ -383,14 +369,14 @@ export default function ApplyPage() {
                     </p>
                   </div>
 
-                        <div className="flex items-center">
+                  <div className="flex items-center">
                     <p className="text-sm text-gray-600">
                       Match Score: <b>{scholarship.score}%</b>
                     </p>
-
+                    
                     {scholarship.score >= 80 && (
                       <span className="text-green-600 text-xs">
-                        High chance of acceptance
+                          High chance of acceptance
                       </span>
                     )}
 
