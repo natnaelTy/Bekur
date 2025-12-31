@@ -85,85 +85,33 @@ model Verification {
 }
 
 model UserApplication {
-  id            String            @id @default(cuid())
+  id            String   @id @default(cuid())
+
   userId        String
-  user          User              @relation(fields: [userId], references: [id], onDelete: Cascade)
-  fullName      String
-  phoneNumber   String            @unique
-  email         String            @unique
-  dateOfBirth   DateTime
-  country       String
-  purpose       String
-  passport      String
-  transcriptImg String?           @db.Text
-  passportImg   String?           @db.Text
+  user          User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  fullName      String?
+  phoneNumber   String?
+  email         String?
+  dateOfBirth   DateTime?
+  country_applying_to String?
+  purpose       String?
   program       String?
-  score         Int?
-  appliedAt     DateTime?
-  reviewer      String?
-  notes         String?           @db.Text
-  createdAt     DateTime          @default(now())
-  updatedAt     DateTime          @default(now()) @updatedAt
-  status        ApplicationStatus @default(NOT_APPLIED)
-  progress      Int               @default(0)
-  university    String
-  payments   Payment[]
-  interviews Interview[]
+  university    String?
+  level         String?
+  hasPassport   Boolean  @default(false)
 
-  @@map("userApplication")
-}
+  passportImg   String? @db.Text
+  transcriptImg String? @db.Text
 
-enum ApplicationStatus {
-  NOT_APPLIED
-  APPLIED
-  INTERVIEW
-  OFFERED
-  REJECTED
-  ACCEPTED
-}
+  progress      Int      @default(0) // 0–100 form completion
 
-enum PaymentStatus {
-  PENDING
-  COMPLETED
-  FAILED
-  REFUNDED
-}
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
 
-enum InterviewStatus {
-  SCHEDULED
-  COMPLETED
-  CANCELLED
-  NO_SHOW
-}
+  scholarshipApplications ScholarshipApplication[]
 
-model Payment {
-  id            String          @id @default(cuid())
-  applicationId String
-  application   UserApplication @relation(fields: [applicationId], references: [id], onDelete: Cascade)
-  amount        Float
-  currency      String          @default("ETB")
-  provider      String?
-  transactionId String?         @unique
-  status        PaymentStatus   @default(PENDING)
-  createdAt     DateTime        @default(now())
-  updatedAt     DateTime        @updatedAt
-
-  @@map("payment")
-}
-
-model Interview {
-  id            String          @id @default(cuid())
-  applicationId String
-  application   UserApplication @relation(fields: [applicationId], references: [id], onDelete: Cascade)
-  scheduledAt   DateTime
-  interviewer   String?
-  location      String?
-  status        InterviewStatus @default(SCHEDULED)
-  notes         String?         @db.Text
-  createdAt     DateTime        @default(now())
-  updatedAt     DateTime        @updatedAt
-
-  @@map("interview")
+  @@map("user_application")
 }
 
 model Scholarship {
@@ -181,16 +129,95 @@ model Scholarship {
   description        String
 
   createdAt DateTime @default(now())
-  
-  applications       Application[]
+
+  applications ScholarshipApplication[]
 }
 
-model Application {
-  id            String   @id @default(uuid())
-  studentEmail  String
-  scholarshipId String
-  status        String   // draft | submitted | accepted | rejected
-  submittedAt   DateTime?
+model ScholarshipApplication {
+  id              String   @id @default(uuid())
 
-  scholarship Scholarship @relation(fields: [scholarshipId], references: [id])
+  userApplicationId String
+  scholarshipId     String
+
+  status           ScholarshipApplicationStatus @default(DRAFT)
+
+  score            Int?    // matching score %
+  adminNotes       String?
+  externalRef      String? // official portal application ID
+  appliedAt        DateTime?
+
+  reviewer         String?
+
+  userApplication  UserApplication @relation(fields: [userApplicationId], references: [id], onDelete: Cascade)
+  scholarship      Scholarship     @relation(fields: [scholarshipId], references: [id], onDelete: Cascade)
+
+  payments         Payment[]
+  interviews       Interview[]
+
+  createdAt        DateTime @default(now())
+  updatedAt        DateTime @updatedAt
+
+  @@unique([userApplicationId, scholarshipId])
+  @@map("scholarship_application")
+}
+
+enum ScholarshipApplicationStatus {
+  DRAFT       
+  IN_PROGRESS 
+  SUBMITTED   
+  INTERVIEW
+  OFFERED
+  REJECTED
+  ACCEPTED
+}
+
+
+model Payment {
+  id              String   @id @default(cuid())
+
+  scholarshipApplicationId String
+  application               ScholarshipApplication @relation(fields: [scholarshipApplicationId], references: [id], onDelete: Cascade)
+
+  amount          Float
+  currency        String   @default("ETB")
+  provider        String?
+  transactionId   String?  @unique
+  status          PaymentStatus @default(PENDING)
+
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
+
+  @@map("payment")
+}
+
+enum PaymentStatus {
+  PENDING
+  COMPLETED
+  FAILED
+  REFUNDED
+}
+
+model Interview {
+  id              String   @id @default(cuid())
+
+  scholarshipApplicationId String
+  application               ScholarshipApplication @relation(fields: [scholarshipApplicationId], references: [id], onDelete: Cascade)
+
+  scheduledAt     DateTime
+  interviewer     String?
+  location        String?
+  status          InterviewStatus @default(SCHEDULED)
+  notes           String? @db.Text
+
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
+
+  @@map("interview")
+}
+
+enum InterviewStatus {
+  SCHEDULED
+  COMPLETED
+  CANCELLED
+  NO_SHOW
 }
