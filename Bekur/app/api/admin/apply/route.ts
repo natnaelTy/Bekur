@@ -1,16 +1,29 @@
 import { prisma } from "@/lib/prisma";
 
 export async function POST(req: Request) {
-  const body = await req.json();
+  const body: {
+    email?: string;
+    phoneNumber?: string;
+    fullName?: string;
+    country?: string;
+    program?: string;
+    userId?: string;
+  } = await req.json();
 
-  const application = await prisma.application.create({
+  if (!body.userId) {
+    return new Response(JSON.stringify({ error: "userId is required" }), { status: 400 });
+  }
+
+  const application = await prisma.userApplication.create({
     data: {
-      studentEmail: body.email,
-      scholarshipId: body.selectedScholarshipId,
-      status: "submitted",
-      submittedAt: new Date(),
+      userId: body.userId,
+      email: body.email,
+      phoneNumber: body.phoneNumber,
+      fullName: body.fullName,
+      country_applying_to: body.country,
+      program: body.program,
     },
   });
 
-  return Response.json(application);
+  return new Response(JSON.stringify(application), { status: 201 });
 }
