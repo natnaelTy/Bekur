@@ -153,6 +153,7 @@ model ScholarshipApplication {
 
   payments         Payment[]
   interviews       Interview[]
+  motivationLetter MotivationLetter[]
 
   createdAt        DateTime @default(now())
   updatedAt        DateTime @updatedAt
@@ -169,6 +170,23 @@ enum ScholarshipApplicationStatus {
   OFFERED
   REJECTED
   ACCEPTED
+}
+
+model MotivationLetter {
+  id             String   @id @default(cuid())
+
+  scholarshipApplicationId  String
+  scholarshipApplication    ScholarshipApplication @relation(fields: [scholarshipApplicationId], references: [id], onDelete: Cascade)
+
+  content        String   @db.Text
+  aiGenerated    Boolean  @default(true)
+
+  approved       Boolean  @default(false)
+  approvedBy     String?  // admin id/email
+  approvedAt     DateTime?
+
+  createdAt      DateTime @default(now())
+  updatedAt      DateTime @updatedAt
 }
 
 
