@@ -13,7 +13,7 @@ export async function searchScholarships(params: {
       "Content-Type": "application/json",
     },
     body: JSON.stringify({
-      q: query,
+      q: query, 
       num: 10,
     }),
   });
