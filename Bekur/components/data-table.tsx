@@ -18,50 +18,35 @@ import {
 import { Badge } from "@/components/ui/badge";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Search } from "lucide-react";
+import axios from "axios";
 
 type Applicant = {
   id: string;
-  name: string;
+  fullName: string;
   email: string;
-  country: string;
-  status: "Pending" | "Accepted" | "Rejected";
-  appliedDate: string;
+  country_applying_to: string;
+  status: string;
+  createdAt: string;
+  scholarshipApplications?: any[];
 };
 
 export default function LatestApplicantsPage() {
   const [search, setSearch] = useState("");
-  const applicants: Applicant[] = [
-    {
-      id: "1",
-      name: "Natnael Taye",
-      email: "natitaye316@gmail.com",
-      country: "Canada",
-      status: "Accepted",
-      appliedDate: "2025-10-30",
-    },
-    {
-      id: "2",
-      name: "Sara Mekonnen",
-      email: "sara.mekonnen@example.com",
-      country: "Germany",
-      status: "Pending",
-      appliedDate: "2025-10-28",
-    },
-    {
-      id: "3",
-      name: "Abdul Rahman",
-      email: "abdul.rahman@example.com",
-      country: "UAE",
-      status: "Rejected",
-      appliedDate: "2025-10-25",
-    },
-  ];
+  const [applicants, setApplicants] = useState<Applicant[]>([]);
 
-  const filtered = applicants.filter((a) =>
-    a.name.toLowerCase().includes(search.toLowerCase())
-  );
+  useEffect(() => {
+    async function fetchApplicants() {
+      const res = await axios.get("/api/admin/apply");
+      const data = await res.data.allApplications;
+      setApplicants(data);
+    }
+
+    fetchApplicants();
+  }, []);
+
+  console.log("Applicants:", applicants);
 
   return (
     <div className="max-h-screen p-6">
@@ -103,28 +88,33 @@ export default function LatestApplicantsPage() {
               </TableRow>
             </TableHeader>
             <TableBody>
-              {filtered.map((applicant) => (
+              {applicants.map((applicant) => (
                 <TableRow key={applicant.id}>
                   <TableCell className="font-medium">
-                    {applicant.name}
+                    {applicant.fullName}
                   </TableCell>
                   <TableCell>{applicant.email}</TableCell>
-                  <TableCell>{applicant.country}</TableCell>
+                  <TableCell>{applicant.country_applying_to}</TableCell>
                   <TableCell>
-                    <Badge
-                      variant={
-                        applicant.status === "Accepted"
-                          ? "default"
-                          : applicant.status === "Pending"
-                          ? "secondary"
-                          : "destructive"
-                      }
-                      className="px-2 py-1 rounded-full text-xs"
-                    >
-                      {applicant.status}
-                    </Badge>
+                    {(() => {
+                      const status = applicant.scholarshipApplications?.[0]?.status;
+                      return (
+                        <Badge
+                          variant={
+                            status === "APPROVED"
+                              ? "default"
+                              : status === "SUBMITTED"
+                              ? "secondary"
+                              : "destructive"
+                          }
+                          className="px-2 py-1 rounded-full text-xs"
+                        >
+                          {status}
+                        </Badge>
+                      );
+                    })()}
                   </TableCell>
-                  <TableCell>{applicant.appliedDate}</TableCell>
+                  <TableCell>{applicant.createdAt}</TableCell>
                   <TableCell className="text-right space-x-2">
                     <Button size="sm" variant="outline">
                       View
@@ -146,9 +136,12 @@ export default function LatestApplicantsPage() {
                   </TableCell>
                 </TableRow>
               ))}
-              {filtered.length === 0 && (
+              {applicants.length === 0 && (
                 <TableRow>
-                  <TableCell colSpan={6} className="text-center py-6 text-gray-500">
+                  <TableCell
+                    colSpan={6}
+                    className="text-center py-6 text-gray-500"
+                  >
                     No applicants found
                   </TableCell>
                 </TableRow>
@@ -157,10 +150,16 @@ export default function LatestApplicantsPage() {
           </Table>
 
           <div className="flex justify-between items-center mt-6 text-sm text-gray-500">
-            <span>Showing {filtered.length} of {applicants.length} applicants</span>
+            <span>
+              Showing {applicants.length} of {applicants.length} applicants
+            </span>
             <div className="flex gap-2">
-              <Button size="sm" variant="outline">Previous</Button>
-              <Button size="sm" variant="outline">Next</Button>
+              <Button size="sm" variant="outline">
+                Previous
+              </Button>
+              <Button size="sm" variant="outline">
+                Next
+              </Button>
             </div>
           </div>
         </CardContent>
