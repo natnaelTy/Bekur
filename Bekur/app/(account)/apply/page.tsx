@@ -42,6 +42,7 @@ import {
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
+import { adminAPI } from "@/utils/adminAPI";
 
 const ApplicationSchema = z.object({
   fullName: z.string().min(2, "Full name is required"),
@@ -57,6 +58,9 @@ type ApplicationData = z.infer<typeof ApplicationSchema>;
 export default function ApplyPage() {
   const [recommendations, setRecommendations] = useState<any[]>([]);
   const [loadingRecommendations, setLoadingRecommendations] = useState(false);
+  const [selectedScholarshipId, setSelectedScholarshipId] = useState<string | null>(
+    null
+  );
 
   const [countries, setCountries] = useState<any[]>([]);
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -91,16 +95,12 @@ export default function ApplyPage() {
     setLoadingRecommendations(true);
     const validation = ApplicationSchema.safeParse(data);
 
-    const res = await fetch(
-      "http://localhost:3000/api/admin/recommend-scholarships",
-      {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(validation.data),
-      }
+    const res = await adminAPI.post(
+      "/recommend-scholarships",
+      validation.success ? data : {}
     );
 
-    const result = await res.json();
+    const result = await res.data;
 
     setRecommendations(result.recommendations);
 
@@ -111,13 +111,27 @@ export default function ApplyPage() {
   };
 
   const submitApplication = async (data: ApplicationData) => {
-    await fetch("/api/apply", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify(data),
-    });
+    if (!selectedScholarshipId) {
+      toast.error("Please select a scholarship to apply for.");
+      return;
+    }
 
-    alert("Application submitted successfully!");
+    try {
+      setIsSubmitting(true);
+      await adminAPI.post("/apply", {
+        ...data,
+        scholarshipId: selectedScholarshipId,
+        userId: userId,
+      });
+
+      toast.success("Application submitted successfully!");
+      setRecommendations([]); // closes drawer
+      setSelectedScholarshipId(null);
+    } catch (err) {
+      toast.error("Unable to submit your application. Please try again.");
+    } finally {
+      setIsSubmitting(false);
+    }
   };
 
   // loading state
@@ -272,56 +286,6 @@ export default function ApplyPage() {
                 </p>
               )}
             </div>
-
-            {/*            
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-              <div>
-                <Label>Upload Transcript</Label>
-                <label className="flex flex-col items-center justify-center w-full h-32 border-2 border-dashed rounded-lg mt-2 cursor-pointer dark:border-gray-700 hover:bg-gray-100 dark:hover:bg-gray-800 transition">
-                  <div className="flex flex-col items-center justify-center pt-5 pb-6">
-                    <UploadCloud className="w-6 h-6 mb-2 text-gray-500" />
-                    <p className="text-sm text-gray-500 dark:text-gray-400">
-                      {formData.transcript
-                        ? formData.transcript.name
-                        : "Click to upload transcript"}
-                    </p>
-                  </div>
-                  <Input
-                    type="file"
-                    accept=".pdf,.jpg,.jpeg,.png"
-                    onChange={(e) =>
-                      handleFileChange(
-                        "transcript",
-                        e.target.files?.[0] || null
-                      )
-                    }
-                    className="hidden"
-                  />
-                </label>
-              </div>
-
-              <div>
-                <Label>Upload Passport Photo</Label>
-                <label className="flex flex-col items-center justify-center w-full h-32 border-2 border-dashed rounded-lg mt-2 cursor-pointer dark:border-gray-700 hover:bg-gray-100 dark:hover:bg-gray-800 transition">
-                  <div className="flex flex-col items-center justify-center pt-5 pb-6">
-                    <UploadCloud className="w-6 h-6 mb-2 text-gray-500" />
-                    <p className="text-sm text-gray-500 dark:text-gray-400">
-                      {formData.photo
-                        ? formData.photo.name
-                        : "Click to upload passport photo"}
-                    </p>
-                  </div>
-                  <Input
-                    type="file"
-                    accept=".jpg,.jpeg,.png"
-                    onChange={(e) =>
-                      handleFileChange("photo", e.target.files?.[0] || null)
-                    }
-                    className="hidden"
-                  />
-                </label>
-              </div>
-            </div> */}
           </form>
           <button
             onClick={handleSubmit(fetchRecommendations)}
@@ -337,7 +301,10 @@ export default function ApplyPage() {
         direction="right"
         open={recommendations.length > 0}
         onOpenChange={(open) => {
-          if (!open) setRecommendations([]);
+          if (!open) {
+            setRecommendations([]);
+            setSelectedScholarshipId(null);
+          }
         }}
       >
         <DrawerContent className="bg-gray-50 dark:bg-gray-950">
@@ -346,16 +313,19 @@ export default function ApplyPage() {
             <DrawerDescription>Select one to continue.</DrawerDescription>
           </DrawerHeader>
           <div className="no-scrollbar overflow-y-auto px-4">
-            <div className="space-y-3 flex flex-col mb-10">
+            <div className="space-y-3 flex flex-col mb-10 w-full">
               {recommendations.map((scholarship) => (
                 <label
                   key={scholarship.id}
-                  className="flex flex-col items-start gap-3 p-3 border rounded cursor-pointer hover:bg-gray-100 dark:hover:bg-gray-900"
+                  className="flex items-start gap-3 p-3 border rounded cursor-pointer hover:bg-gray-100 dark:hover:bg-gray-900"
                 >
                   <input
                     type="radio"
                     name="selectedScholarship"
                     value={scholarship.id}
+                    onChange={() =>
+                      setSelectedScholarshipId(String(scholarship.id))
+                    }
                     className="accent-blue-600"
                   />
 
@@ -368,35 +338,21 @@ export default function ApplyPage() {
                       Deadline: {scholarship.deadline || "Not specified"}
                     </p>
                   </div>
-
-                  <div className="flex items-center">
-                    <p className="text-sm text-gray-600">
-                      Match Score: <b>{scholarship.score}%</b>
-                    </p>
-                    
-                    {scholarship.score >= 80 && (
-                      <span className="text-green-600 text-xs">
-                          High chance of acceptance
-                      </span>
-                    )}
-
-                    {scholarship.score >= 60 && scholarship.score < 80 && (
-                      <span className="text-yellow-600 text-xs">
-                        Medium chance
-                      </span>
-                    )}
-
-                    {scholarship.score < 60 && (
-                      <span className="text-red-600 text-xs">Low chance</span>
-                    )}
-                  </div>
                 </label>
               ))}
             </div>
           </div>
           <DrawerFooter>
+            <Button
+              onClick={handleSubmit(submitApplication)}
+              disabled={isSubmitting}
+            >
+              {isSubmitting ? "Submitting..." : "Apply"}
+            </Button>
             <DrawerClose asChild>
-              <Button variant="outline">Close</Button>
+              <Button variant="outline" className="rounded-full mt-2">
+                Close
+              </Button>
             </DrawerClose>
           </DrawerFooter>
         </DrawerContent>
