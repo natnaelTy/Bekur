@@ -170,6 +170,7 @@ enum ScholarshipApplicationStatus {
   OFFERED
   REJECTED
   ACCEPTED
+  APPROVED
 }
 
 model MotivationLetter {
