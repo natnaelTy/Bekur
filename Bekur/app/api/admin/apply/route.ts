@@ -1,5 +1,8 @@
 import { prisma } from "@/lib/prisma";
 import { NextResponse } from "next/server";
+import { application } from "@/lib/scholarships/applications/application";
+
+
 
 type ApplyBody = {
   fullName?: string;
@@ -72,6 +75,10 @@ export async function POST(req: Request) {
       },
     });
 
+    console.log("Scholarship Application:", scholarshipApplication.userApplicationId);
+
+    await application({ id: scholarshipApplication.userApplicationId });
+
     return NextResponse.json(
       { application: userApplication, scholarshipApplication },
       { status: 201 }
@@ -90,17 +97,20 @@ export async function GET() {
     const allApplications = await prisma.userApplication.findMany({
       include: {
         user: {
-          select: { email: true } // Identify who the user is
+          select: { email: true } 
         },
         scholarshipApplications: {
           include: {
             scholarship: {
-              select: { title: true } // Name of the scholarship
+              select: { title: true, } 
+            },
+            motivationLetter: {
+              select: { approved: true, content: true } 
             }
           }
         }
       },
-      orderBy: { updatedAt: 'desc' } // See latest updates first
+      orderBy: { updatedAt: 'desc' }
     });
 
     return NextResponse.json({allApplications}, { status: 200 });
