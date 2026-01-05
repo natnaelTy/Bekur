@@ -31,6 +31,10 @@ type Applicant = {
   createdAt: string;
   scholarshipApplications?: any[];
 };
+import dateFormate from "@/utils/DateFormate";
+
+
+
 
 export default function LatestApplicantsPage() {
   const [search, setSearch] = useState("");
@@ -46,7 +50,16 @@ export default function LatestApplicantsPage() {
     fetchApplicants();
   }, []);
 
-  console.log("Applicants:", applicants);
+  async function handleApprove(applicantId: string) {
+    try {
+      await axios.patch(`/api/admin/approve/${applicantId}`, {
+        approved: true
+      });
+    } catch (error) {
+      console.error("Error approving applicant:", error);
+    }
+  }
+
 
   return (
     <div className="max-h-screen p-6">
@@ -81,7 +94,7 @@ export default function LatestApplicantsPage() {
               <TableRow>
                 <TableHead>Full Name</TableHead>
                 <TableHead>Email</TableHead>
-                <TableHead>Country</TableHead>
+                <TableHead>Country Applying To</TableHead>
                 <TableHead>Status</TableHead>
                 <TableHead>Date Applied</TableHead>
                 <TableHead className="text-right">Actions</TableHead>
@@ -100,21 +113,21 @@ export default function LatestApplicantsPage() {
                       const status = applicant.scholarshipApplications?.[0]?.status;
                       return (
                         <Badge
-                          variant={
-                            status === "APPROVED"
-                              ? "default"
-                              : status === "SUBMITTED"
-                              ? "secondary"
-                              : "destructive"
-                          }
-                          className="px-2 py-1 rounded-full text-xs"
+                          className={`px-3 py-1 rounded-full text-xs ${status === "APPROVED" || status === "IN_PROGRESS"
+                            ? "bg-yellow-400/10 text-yellow-400 border border-yellow-400/20"
+                            : status === "SUBMITTED"
+                            ? "bg-gray-400/10 text-gray-400 border border-gray-400/20"
+                            : status === "REJECTED"
+                            ? "bg-red-400/10 text-red-400 border border-red-400/20"
+                            : ""
+                          }`}
                         >
                           {status}
                         </Badge>
                       );
                     })()}
                   </TableCell>
-                  <TableCell>{applicant.createdAt}</TableCell>
+                  <TableCell>{dateFormate(applicant.createdAt)}</TableCell>
                   <TableCell className="text-right space-x-2">
                     <Button size="sm" variant="outline">
                       View
@@ -123,6 +136,7 @@ export default function LatestApplicantsPage() {
                       size="sm"
                       variant="default"
                       className="bg-green-600 hover:bg-green-700"
+                      onClick={() => handleApprove(applicant.scholarshipApplications?.[0]?.id)}
                     >
                       Approve
                     </Button>
