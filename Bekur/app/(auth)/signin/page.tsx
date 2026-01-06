@@ -21,7 +21,7 @@ import { FcGoogle } from "react-icons/fc";
 import { toast } from "sonner";
 import { signIn } from "@/lib/auth-client";
 import { handleGoogleSignIn } from "@/lib/auth-client";
-
+import { useRouter } from "next/navigation";
 
 // zod validation schema for login
 const loginSchema = z.object({
@@ -39,7 +39,9 @@ export default function signin() {
     resolver: zodResolver(loginSchema),
     defaultValues: { email: "", password: "" },
   });
+  const router = useRouter();
 
+  
   const onSubmit = async (data: LoginFormValues) => {
     setLoading(true);
     try {
@@ -52,6 +54,7 @@ export default function signin() {
       } else {
         toast.success("Login successful!");
         form.reset();
+        router.push("/");
       }
     } catch (error) {
       toast.error("Invalid credentials. Please try again.");

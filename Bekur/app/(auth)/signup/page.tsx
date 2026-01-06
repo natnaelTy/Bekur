@@ -21,7 +21,7 @@ import { Button } from "@/components/ui/button";
 import { signUp } from "@/lib/auth-client";
 import { toast } from "sonner"
 import { handleGoogleSignIn } from "@/lib/auth-client";
-
+import { useRouter } from "next/navigation";
 // Zod validation schema
 const signupSchema = z.object({
   fullName: z
@@ -45,6 +45,7 @@ export default function SignupPage() {
     resolver: zodResolver(signupSchema),
     defaultValues: { fullName: "", email: "", password: "" },
   });
+  const router = useRouter();
 
   async function onSubmit(data: SignupFormValues) {
     setLoading(true);
@@ -59,6 +60,7 @@ export default function SignupPage() {
         toast.error(error.message);
       } else {
         toast.success("Account created successfully!");
+        router.push("/");
       }
     } catch (err) {
       console.error(err);
