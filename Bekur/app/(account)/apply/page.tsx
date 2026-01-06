@@ -18,7 +18,7 @@ import {
   PopoverContent,
 } from "@/components/ui/popover";
 import { Calendar } from "@/components/ui/calendar";
-import { CalendarIcon, UploadCloud } from "lucide-react";
+import { CalendarIcon, Loader2, UploadCloud } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { toast } from "sonner";
 import { format } from "date-fns";
@@ -58,9 +58,9 @@ type ApplicationData = z.infer<typeof ApplicationSchema>;
 export default function ApplyPage() {
   const [recommendations, setRecommendations] = useState<any[]>([]);
   const [loadingRecommendations, setLoadingRecommendations] = useState(false);
-  const [selectedScholarshipId, setSelectedScholarshipId] = useState<string | null>(
-    null
-  );
+  const [selectedScholarshipId, setSelectedScholarshipId] = useState<
+    string | null
+  >(null);
 
   const [countries, setCountries] = useState<any[]>([]);
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -144,7 +144,7 @@ export default function ApplyPage() {
   }
 
   return (
-    <div className="min-h-screen bg-gray-50 dark:bg-gray-950 py-10 px-3 flex justify-center py-26 relative overflow-hidden">
+    <div className="bg-gray-50 dark:bg-gray-950 py-10 px-3 flex justify-center py-26 relative overflow-hidden">
       <Card className="max-w-xl w-full z-1 bg-white dark:bg-gray-950 rounded-md border border-gray-100 dark:border-gray-900">
         <CardHeader>
           <CardTitle className="text-2xl font-bold text-gray-900 dark:text-white">
@@ -289,7 +289,7 @@ export default function ApplyPage() {
           </form>
           <button
             onClick={handleSubmit(fetchRecommendations)}
-            className="mt-4 bg-blue-600 text-white px-4 py-2 rounded-full hover:bg-blue-700 transition"
+            className="mt-6 bg-blue-600 text-white px-5 py-2 rounded-full hover:bg-blue-700 transition mx-auto w-full"
           >
             Find Scholarships for Me
           </button>
@@ -347,7 +347,11 @@ export default function ApplyPage() {
               onClick={handleSubmit(submitApplication)}
               disabled={isSubmitting}
             >
-              {isSubmitting ? "Submitting..." : "Apply"}
+              {isSubmitting ? (
+                <Loader2 className="w-5 h-5 animate-spin" />
+              ) : (
+                "Apply"
+              )}
             </Button>
             <DrawerClose asChild>
               <Button variant="outline" className="rounded-full mt-2">
