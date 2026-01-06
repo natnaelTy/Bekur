@@ -43,37 +43,37 @@ const data = {
   navMain: [
     {
       title: "Overview",
-      url: "#",
+      url: "/admin/overview",
       icon: IconLayoutDashboard,
     },
     {
       title: "Applications",
-      url: "#",
+      url: "/admin/applications",
       icon: IconClipboardText,
     },
     {
       title: "Analytics",
-      url: "#",
+      url: "/admin/analytics",
       icon: IconChartBar,
     },
     {
       title: "Users",
-      url: "#",
+      url: "/admin/users",
       icon: IconUsers,
     },
     {
       title: "Payments",
-      url: "#",
+      url: "/admin/payments",
       icon: IconCreditCard,
     },
     {
       title: "Interviews",
-      url: "#",
+      url: "/admin/interviews",
       icon: IconBrandSpacehey,
     },
     {
       title: "Notifications",
-      url: "#",
+      url: "/admin/notifications",
       icon: IconBell,
     },
   ],
