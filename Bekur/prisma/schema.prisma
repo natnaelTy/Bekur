@@ -14,12 +14,19 @@ datasource db {
 }
 
 
+enum UserRole {
+  USER
+  ADMIN
+}
+
+
 model User {
   id              String            @id @default(cuid())
   email           String?           @unique
   fullName        String?
   phoneNumber     String?           @unique
   emailVerified   Boolean?          @default(false)
+  role            UserRole          @default(USER)
   accounts        Account[]
   sessions        Session[]
   createdAt       DateTime          @default(now())
