@@ -17,8 +17,9 @@ import {
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { toast } from "sonner";
-import { signIn } from "@/lib/auth-client";
-import { useRouter } from "next/navigation";
+import { authClient, signIn } from "@/lib/auth-client";
+import { redirect } from "next/navigation";
+import { auth } from "@/lib/auth";
 
 const loginSchema = z.object({
   email: z.string().email("Enter a valid email address"),
@@ -30,14 +31,18 @@ type LoginFormValues = z.infer<typeof loginSchema>;
 export default function AdminSignin() {
   const [showPassword, setShowPassword] = useState(false);
   const [loading, setLoading] = useState(false);
+  const { data: session, isPending, error } = authClient.useSession();
 
   const form = useForm<LoginFormValues>({
     resolver: zodResolver(loginSchema),
     defaultValues: { email: "", password: "" },
   });
-  const router = useRouter();
 
   const onSubmit = async (data: LoginFormValues) => {
+    if (!session || session.user.role !== "ADMIN") {
+      toast.error("Access denied. Admins only.");
+      redirect("/");
+    }
     setLoading(true);
     try {
       const { error } = await signIn.email({
@@ -49,7 +54,7 @@ export default function AdminSignin() {
       } else {
         toast.success("Admin login successful!");
         form.reset();
-        router.push("/admin/overview");
+        redirect("/admin/overview");
       }
     } catch (error) {
       toast.error("Invalid credentials. Please try again.");
@@ -132,7 +137,10 @@ export default function AdminSignin() {
               />
 
               <div className="text-right mt-2">
-                <Link href="/forgot-password" className="text-sm text-blue-600 hover:underline">
+                <Link
+                  href="/forgot-password"
+                  className="text-sm text-blue-600 hover:underline"
+                >
                   Forgot password?
                 </Link>
               </div>
@@ -142,13 +150,20 @@ export default function AdminSignin() {
                 disabled={loading}
                 className="primaryBtn w-full flex items-center justify-center"
               >
-                {loading ? <Loader2 className="w-5 h-5 animate-spin" /> : "Sign In"}
+                {loading ? (
+                  <Loader2 className="w-5 h-5 animate-spin" />
+                ) : (
+                  "Sign In"
+                )}
               </button>
             </form>
           </Form>
 
           <p className="text-center text-sm text-gray-600 dark:text-gray-400 mt-6">
-            Not an admin? <Link href="/signin" className="text-blue-600 hover:underline">Go to user sign in</Link>
+            Not an admin?{" "}
+            <Link href="/signin" className="text-blue-600 hover:underline">
+              Go to user sign in
+            </Link>
           </p>
         </motion.div>
 
