@@ -1,11 +1,35 @@
-import { ChartAreaInteractive } from "@/components/chart-area-interactive"
-import ManageStudentsPage from "@/components/data-table"
-import { SectionCards } from "@/components/section-cards"
-import { SiteHeader } from "@/components/site-header"
+"use client";
 
-import data from "./data.json"
+import { useEffect } from "react";
+import { useRouter } from "next/navigation";
+import { ChartAreaInteractive } from "@/components/chart-area-interactive";
+import ManageStudentsPage from "@/components/data-table";
+import { SectionCards } from "@/components/section-cards";
+import { SiteHeader } from "@/components/site-header";
+import { authClient } from "@/lib/auth-client";
 
 export default function Page() {
+  const router = useRouter();
+  const { data: session, isPending, error } = authClient.useSession();
+
+  useEffect(() => {
+    if (!isPending && (!session || session.user.role !== "ADMIN")) {
+      router.replace("/");
+    }
+  }, [isPending, router, session]);
+
+  if (error) {
+    return null;
+  }
+
+  if (isPending || !session) {
+    return (
+      <div className="flex h-screen items-center justify-center">
+        <p className="text-sm text-muted-foreground">Checking admin access...</p>
+      </div>
+    );
+  }
+
   return (
     <>
       <SiteHeader />
@@ -21,5 +45,5 @@ export default function Page() {
         </div>
       </div>
     </>
-  )
+  );
 }
