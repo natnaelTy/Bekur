@@ -18,7 +18,7 @@ import {
 import { Input } from "@/components/ui/input";
 import { toast } from "sonner";
 import { authClient, signIn } from "@/lib/auth-client";
-import { redirect } from "next/navigation";
+import { useRouter } from "next/navigation";
 import { auth } from "@/lib/auth";
 
 const loginSchema = z.object({
@@ -32,6 +32,7 @@ export default function AdminSignin() {
   const [showPassword, setShowPassword] = useState(false);
   const [loading, setLoading] = useState(false);
   const { data: session, isPending, error } = authClient.useSession();
+  const router = useRouter();
 
   const form = useForm<LoginFormValues>({
     resolver: zodResolver(loginSchema),
@@ -39,10 +40,7 @@ export default function AdminSignin() {
   });
 
   const onSubmit = async (data: LoginFormValues) => {
-    if (!session || session.user.role !== "ADMIN") {
-      toast.error("Access denied. Admins only.");
-      redirect("/");
-    }
+    
     setLoading(true);
     try {
       const { error } = await signIn.email({
@@ -54,9 +52,10 @@ export default function AdminSignin() {
       } else {
         toast.success("Admin login successful!");
         form.reset();
-        redirect("/admin/overview");
+        router.replace("/admin/overview");
       }
     } catch (error) {
+      console.error(error);
       toast.error("Invalid credentials. Please try again.");
     } finally {
       setLoading(false);
