@@ -26,37 +26,32 @@ export async function POST(req: Request) {
       return NextResponse.json({ error: "scholarshipId is required" }, { status: 400 });
     }
 
+    const priorApplication = await prisma.userApplication.findFirst({
+      where: { userId: body.userId },
+      select: { id: true },
+    });
+
+    if (priorApplication) {
+      return NextResponse.json(
+        { error: "You have already submitted an application." },
+        { status: 409 }
+      );
+    }
+
     const hasPassportBool = body.hasPassport === "yes";
     const dob = body.dateOfBirth ? new Date(body.dateOfBirth) : undefined;
 
-    // single userApplication record per user
-    const existingApplication = await prisma.userApplication.findFirst({
-      where: { userId: body.userId },
+    const userApplication = await prisma.userApplication.create({
+      data: {
+        userId: body.userId,
+        fullName: body.fullName,
+        email: body.email,
+        phoneNumber: body.phone,
+        country_applying_to: body.country,
+        dateOfBirth: dob,
+        hasPassport: hasPassportBool,
+      },
     });
-
-    const userApplication = existingApplication
-      ? await prisma.userApplication.update({
-          where: { id: existingApplication.id },
-          data: {
-            fullName: body.fullName,
-            email: body.email,
-            phoneNumber: body.phone,
-            country_applying_to: body.country,
-            dateOfBirth: dob,
-            hasPassport: hasPassportBool,
-          },
-        })
-      : await prisma.userApplication.create({
-          data: {
-            userId: body.userId,
-            fullName: body.fullName,
-            email: body.email,
-            phoneNumber: body.phone,
-            country_applying_to: body.country,
-            dateOfBirth: dob,
-            hasPassport: hasPassportBool,
-          },
-        });
 
     // Link the application to the selected scholarship, avoiding duplicates
     const scholarshipApplication = await prisma.scholarshipApplication.upsert({
