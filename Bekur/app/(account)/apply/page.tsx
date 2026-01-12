@@ -26,7 +26,7 @@ import { getCountries } from "@/lib/Country";
 import Flag from "@/app/components/Flag";
 import { emoji } from "zod/v4";
 import axios from "axios";
-import { useParams } from "next/navigation";
+import { redirect, useParams } from "next/navigation";
 import { useSession } from "@/lib/auth-client";
 import { Spinner } from "@/components/ui/spinner";
 import {
@@ -43,13 +43,19 @@ import { useForm } from "react-hook-form";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { adminAPI } from "@/utils/adminAPI";
+import Loader from "@/components/kokonutui/loader";
 
 const ApplicationSchema = z.object({
   fullName: z.string().min(2, "Full name is required"),
   email: z.string().email("Invalid email address"),
   phone: z.string().min(9, "Phone number is required"),
   country: z.string().min(2, "Country is required"),
-  dateOfBirth: z.date().optional(),
+  dateOfBirth: z
+    .date({ error: "Date of birth is required" })
+    .refine((d) => d instanceof Date && !isNaN(d.getTime()), {
+      message: "Invalid date of birth",
+    })
+    .max(new Date(), { message: "Date of birth cannot be in the future" }),
   hasPassport: z.enum(["yes", "no"] as const),
 });
 
@@ -97,7 +103,13 @@ export default function ApplyPage() {
 
     const res = await adminAPI.post(
       "/recommend-scholarships",
-      validation.success ? data : {}
+      validation.success
+        ? {
+            ...data,
+            ...(data.country ? { country: data.country } : {}),
+            ...(data.hasPassport ? { hasPassport: data.hasPassport } : {}),
+          }
+        : {}
     );
 
     const result = await res.data;
@@ -120,32 +132,45 @@ export default function ApplyPage() {
       setIsSubmitting(true);
       await adminAPI.post("/apply", {
         ...data,
+        ...(data.country ? { country: data.country } : {}),
+        ...(data.hasPassport ? { hasPassport: data.hasPassport } : {}),
         scholarshipId: selectedScholarshipId,
         userId: userId,
       });
 
       toast.success("Application submitted successfully!");
-      setRecommendations([]); // closes drawer
+      setRecommendations([]);
       setSelectedScholarshipId(null);
+      setIsApplied(true);
+      redirect("/dashboard");
     } catch (err) {
-      toast.error("Unable to submit your application. Please try again.");
+      if (axios.isAxiosError(err)) {
+        const message = err.response?.data?.error || err.message;
+        toast.error(message || "Failed to submit application.");
+      } else {
+        const message = (err as Error)?.message;
+        toast.error(message || "Failed to submit application.");
+      }
     } finally {
       setIsSubmitting(false);
     }
   };
 
   // loading state
-  {
-    loadingRecommendations && (
-      <p className="text-sm text-gray-500">
-        Finding best scholarships for you...
-      </p>
+  if (loadingRecommendations) {
+    return (
+      <div className="flex h-screen items-center justify-center">
+        <Loader
+          size="md"
+          title="Finding best scholarships for you..."
+        />
+      </div>
     );
   }
 
   return (
-    <div className="bg-gray-50 dark:bg-gray-950 py-10 px-3 flex justify-center py-26 relative overflow-hidden">
-      <Card className="max-w-xl w-full z-1 bg-white dark:bg-gray-950 rounded-md border border-gray-100 dark:border-gray-900">
+    <div className="min-h-screen bg-gray-50 dark:bg-gray-950 py-10 px-3 flex justify-center py-26 relative overflow-hidden">
+      <Card className="max-w-xl w-full z-1 bg-white dark:bg-gray-950 rounded-md border border-gray-100 dark:border-gray-900 h-full">
         <CardHeader>
           <CardTitle className="text-2xl font-bold text-gray-900 dark:text-white">
             Apply for Scholarship
@@ -225,8 +250,10 @@ export default function ApplyPage() {
                     <Calendar
                       mode="single"
                       selected={watch("dateOfBirth")}
-                      onSelect={(date) => setValue("dateOfBirth", date)}
+                      onSelect={(date) => setValue("dateOfBirth", date as Date, { shouldValidate: true })}
                       captionLayout="dropdown"
+                      toYear={new Date().getFullYear()}
+                      fromYear={1900}
                     />
                   </PopoverContent>
                 </Popover>
@@ -289,9 +316,14 @@ export default function ApplyPage() {
           </form>
           <button
             onClick={handleSubmit(fetchRecommendations)}
+            disabled={loadingRecommendations}
             className="mt-6 bg-blue-600 text-white px-5 py-2 rounded-full hover:bg-blue-700 transition mx-auto w-full"
           >
-            Find Scholarships for Me
+            {loadingRecommendations ? (
+              <Loader2 className="mx-auto w-5 h-5 animate-spin" />
+            ) : (
+              "Find Scholarships for Me"
+            )}
           </button>
         </CardContent>
       </Card>
