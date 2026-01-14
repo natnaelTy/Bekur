@@ -108,6 +108,8 @@ export async function GET() {
       orderBy: { updatedAt: 'desc' }
     });
 
+    console.log("All Applications:", allApplications);
+    
     return NextResponse.json({allApplications}, { status: 200 });
   } catch (error) {
     return NextResponse.json({ error: "Failed to fetch admin data" }, { status: 500 });
