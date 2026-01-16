@@ -33,7 +33,7 @@ export default function ReferAndEarnPage() {
   ];
 
   return (
-    <div className="min-h-screen bg-gray-50 dark:bg-gray-950 text-gray-900 dark:text-white flex flex-col items-center">
+    <div className="min-h-screen text-gray-900 dark:text-white flex flex-col items-center">
       {/* Hero Section */}
       <section className="text-center py-20 px-6 max-w-4xl">
         <motion.h1
@@ -64,13 +64,13 @@ export default function ReferAndEarnPage() {
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.6, delay: index * 0.15 }}
           >
-            <Card className="bg-white dark:bg-gray-950 border border-gray-100 dark:border-gray-900 rounded-2xl h-full hover:shadow-xl transition-all flex flex-col text-center">
+            <Card className="rounded-2xl h-full hover:shadow-xl transition-all flex flex-col text-center">
               <CardHeader className="flex flex-col items-center">
                 <div className="mb-4">{step.icon}</div>
                 <CardTitle className="text-xl font-bold">{step.title}</CardTitle>
               </CardHeader>
               <CardContent>
-                <p className="text-gray-600 dark:text-gray-400 text-sm md:text-base leading-relaxed">
+                <p className="text-sm md:text-base leading-relaxed">
                   {step.description}
                 </p>
               </CardContent>
@@ -80,7 +80,7 @@ export default function ReferAndEarnPage() {
       </section>
 
       {/* CTA Section */}
-      <section className="w-full py-20 px-6 bg-gradient-to-r from-blue-800 to-sky-700 text-center text-white rounded-t-3xl mt-16">
+      <section className="w-full py-20 px-6 bg-gray-50 dark:bg-black/8 text-center rounded-t-3xl mt-16">
         <motion.h2
           initial={{ opacity: 0, y: 10 }}
           animate={{ opacity: 1, y: 0 }}

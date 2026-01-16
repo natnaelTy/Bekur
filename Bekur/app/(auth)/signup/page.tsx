@@ -77,12 +77,12 @@ export default function SignupPage() {
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.6 }}
-          className="bg-white dark:bg-gray-950 p-6 md:p-20 w-full max-w-[610px] relative"
+          className="p-6 md:p-20 w-full max-w-[610px] relative"
         >
-          <h1 className="text-2xl md:text-3xl text-slate-800 font-bold text-left mb-2 dark:text-white">
+          <h1 className="text-2xl md:text-3xl font-bold text-left mb-2">
             Create Your Account
           </h1>
-          <p className="text-left text-gray-600 dark:text-gray-400 mb-8 ">
+          <p className="text-left mb-8 ">
             Start your journey toward studying abroad today.
           </p>
 
@@ -95,7 +95,7 @@ export default function SignupPage() {
                 name="fullName"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel className="text-gray-700 dark:text-gray-300">
+                    <FormLabel>
                       Full Name
                     </FormLabel>
                     <FormControl>
@@ -119,7 +119,7 @@ export default function SignupPage() {
                 name="email"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel className="text-gray-700 dark:text-gray-300">
+                    <FormLabel>
                       Email
                     </FormLabel>
                     <FormControl>
@@ -144,7 +144,7 @@ export default function SignupPage() {
                 name="password"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel className="text-gray-700 dark:text-gray-300">
+                    <FormLabel>
                       Password
                     </FormLabel>
                     <FormControl>
@@ -187,7 +187,7 @@ export default function SignupPage() {
 
           {/* Google Signup */}
           <div className="mt-8 text-center">
-            <p className="text-gray-600 dark:text-gray-400 mb-4">
+            <p className="mb-4">
               Or sign up with
             </p>
             <Button

@@ -42,7 +42,7 @@ export default function SupportPage() {
   };
 
   return (
-    <div className="min-h-screen bg-gray-50 dark:bg-gray-950 text-gray-900 dark:text-gray-100">
+    <div className="min-h-screen">
       <div className="max-w-7xl mx-auto w-full py-26 lg:py-30 px-3 md:px-6 ">
         <h1 className="text-3xl font-bold mb-8 flex items-center gap-2">
           Support Center
@@ -50,7 +50,7 @@ export default function SupportPage() {
 
         <div className="grid md:grid-cols-2 gap-8">
           {/* Contact Form */}
-          <Card className="bg-white dark:bg-gray-950 shadow-md">
+          <Card className="shadow-md">
             <CardHeader>
               <CardTitle>Contact Us</CardTitle>
               <CardDescription>
@@ -106,7 +106,7 @@ export default function SupportPage() {
           </Card>
 
           {/* FAQ Section */}
-          <Card className="bg-white dark:bg-gray-950 shadow-md">
+          <Card className="shadow-md">
             <CardHeader>
               <CardTitle>Frequently Asked Questions</CardTitle>
               <CardDescription>
@@ -164,7 +164,7 @@ export default function SupportPage() {
 
         {/* Previous Support Requests */}
         <div className="mt-10">
-          <Card className="bg-white dark:bg-gray-950 shadow-md">
+          <Card className="shadow-md">
             <CardHeader>
               <CardTitle>Previous Requests</CardTitle>
               <CardDescription>
@@ -174,10 +174,10 @@ export default function SupportPage() {
 
             <CardContent>
               <div className="space-y-3">
-                <div className="flex justify-between items-center border-b border-gray-200 dark:border-gray-800 pb-3">
+                <div className="flex justify-between items-center border-b border-gray-200 pb-3">
                   <div>
                     <p className="font-semibold">Issue with Visa Appointment</p>
-                    <p className="text-sm text-gray-500">
+                    <p className="text-sm">
                       Submitted: Oct 23, 2025
                     </p>
                   </div>
@@ -186,10 +186,10 @@ export default function SupportPage() {
                   </span>
                 </div>
 
-                <div className="flex justify-between items-center border-b border-gray-200 dark:border-gray-800 pb-3">
+                <div className="flex justify-between items-center border-b border-gray-200 pb-3">
                   <div>
                     <p className="font-semibold">Payment not reflecting</p>
-                    <p className="text-sm text-gray-500">
+                    <p className="text-sm">
                       Submitted: Oct 19, 2025
                     </p>
                   </div>

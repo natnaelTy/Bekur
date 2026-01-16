@@ -33,12 +33,12 @@ export default function KeyFeatures() {
   ];
 
   return (
-    <div className="min-h-screen text-white flex flex-col items-center justify-center px-3 py-20 bg-gradient-to-br from-indigo-50 via-white to-blue-50 dark:from-gray-950 dark:via-gray-950 dark:to-gray-950">
+    <div className="min-h-screen flex flex-col items-center justify-center px-3 py-20">
       <motion.h1
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.6 }}
-        className="text-4xl md:text-5xl font-bold mb-6 text-center dark:text-white text-slate-900"
+        className="text-4xl md:text-5xl font-bold mb-6 text-center"
       >
         Key Features
       </motion.h1>
@@ -47,7 +47,7 @@ export default function KeyFeatures() {
         initial={{ opacity: 0, y: 10 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.8 }}
-        className="text-lg max-w-2xl text-center mb-12 text-gray-600 dark:text-gray-400"
+        className="text-lg max-w-2xl text-center mb-12 text-muted-foreground"
       >
         Discover what makes our platform your trusted companion in finding global
         scholarships and opportunities abroad.
@@ -61,13 +61,13 @@ export default function KeyFeatures() {
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.5, delay: index * 0.2 }}
           >
-            <Card className="bg-gray-50 dark:bg-gray-950 border-gray-100 dark:border-gray-900 backdrop-blur-2xl hover:shadow-md transition-all rounded-2xl">
+            <Card className="hover:shadow-md transition-all rounded-2xl">
               <CardContent className="flex flex-col gap-4">
                 <div className="flex items-center gap-4">
                   <Image src={feature.icon} alt={feature.title} width={32} height={32} />
                   <h3 className="text-xl font-semibold">{feature.title}</h3>
                 </div>
-                <p className="text-gray-700 dark:text-gray-300 leading-relaxed">
+                <p className="leading-relaxed text-muted-foreground">
                   {feature.description}
                 </p>
               </CardContent>

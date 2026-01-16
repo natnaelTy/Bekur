@@ -1,5 +1,6 @@
 "use client";
 
+import { Card } from "@/components/ui/card";
 import { motion } from "framer-motion";
 import {
   UserPlus,
@@ -46,17 +47,17 @@ export default function LearnPage() {
   ];
 
   return (
-    <div className="min-h-screen bg-gray-50 dark:bg-gray-950 text-white flex flex-col items-center justify-between py-16">
+    <div className="min-h-screen flex flex-col items-center justify-between pt-20">
       <section className="text-center py-10 px-6 max-w-5xl">
       <motion.h1
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.6 }}
-        className="text-4xl md:text-6xl font-bold text-center text-gray-900 dark:text-white"
+        className="text-4xl md:text-6xl font-bold text-center"
       >
         Learn How Our Platform Works
       </motion.h1>
-      <p className="text-gray-600 dark:text-gray-400 text-center mb-10 max-w-3xl mt-4 text-base md:text-lg">
+      <p className="text-center mb-10 max-w-3xl mt-4 text-base md:text-lg">
         Our goal is to make studying or attending events abroad simple and
         stress-free. Here’s how you move from signing up to boarding your flight
         — step by step.
@@ -66,7 +67,7 @@ export default function LearnPage() {
       {/* Progress Graph */}
       <div className="relative flex flex-col items-start justify-between w-full max-w-6xl">
         {/* Connecting Line */}
-        <div className="absolute top-5 left-9 h-full w-[1.5px] bg-gray-200 dark:bg-gray-900" />
+        <div className="absolute top-5 left-9 h-full w-[1px] bg-gray-300/40 dark:bg-gray-200/6" />
 
         {steps.map((step, index) => (
           <motion.div
@@ -76,20 +77,20 @@ export default function LearnPage() {
             transition={{ duration: 0.5, delay: index * 0.15 }}
             className="relative flex flex-col items-start text-left p-4"
           >
-            <span className="text-lg bg-gray-100 dark:bg-gray-900 p-3 w-10 h-10 rounded-full flex items-center justify-center font-semibold text-gray-900 dark:text-blue-600">
+            <Card className="text-lg p-3 w-10 h-10 rounded-full flex items-center justify-center font-semibold">
               {index + 1}
-            </span>
+            </Card>
 
             <div className="ml-16 mt-[-2.5rem]">
-              <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-2">{step.title}</h3>
-              <p className="text-gray-600 dark:text-gray-400">{step.description}</p>
+              <h3 className="text-lg font-semibold mb-2">{step.title}</h3>
+              <p>{step.description}</p>
             </div>
           </motion.div>
         ))}
       </div>
 
       {/* CTA */}
-      <div className="w-full py-20 px-6 bg-gradient-to-r from-blue-800 to-sky-600 text-center text-white rounded-t-3xl mt-16">
+      <div className="w-full py-20 px-6 bg-gray-50 dark:bg-black/8 text-center rounded-t-3xl mt-16">
         <motion.h2
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
@@ -98,7 +99,7 @@ export default function LearnPage() {
         >
           Start Your Journey Today
         </motion.h2>
-        <p className="max-w-2xl mx-auto mb-8 text-gray-200">
+        <p className="max-w-2xl mx-auto mb-8">
           Join thousands of students finding scholarships through AI. Your dream
           opportunity could be one click away.
         </p>

@@ -34,12 +34,12 @@ export default function FAQ() {
 
 
   return (
-    <div className="min-h-screen flex flex-col items-center justify-center dark:bg-gray-950 px-3 py-12 relative w-full overflow-hidden">
+    <div className="min-h-screen flex flex-col items-center justify-center px-3 py-12 relative w-full overflow-hidden">
       <motion.h1
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.6 }}
-        className="text-4xl md:text-5xl font-bold mb-8 text-center text-slate-900 dark:text-white"
+        className="text-4xl md:text-5xl font-bold mb-8 text-center"
       >
         Frequently Asked Questions
       </motion.h1>
@@ -48,7 +48,7 @@ export default function FAQ() {
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
         transition={{ delay: 0.3, duration: 0.8 }}
-        className="text-gray-600 dark:text-gray-400 mb-12 max-w-2xl text-center"
+        className="mb-12 max-w-2xl text-center text-muted-foreground"
       >
         Got questions? We’ve got answers. Learn more about how our platform
         helps you reach global opportunities faster.
@@ -65,7 +65,7 @@ export default function FAQ() {
             <Accordion type="single" collapsible>
               <AccordionItem value={`item-${index}`}>
                 <AccordionTrigger className="text-base md:text-lg">{faq.question}</AccordionTrigger>
-                <AccordionContent className="text-sm md:text-base text-gray-700 dark:text-gray-400">
+                <AccordionContent className="text-sm md:text-base text-muted-foreground">
                   {faq.answer}
                 </AccordionContent>
               </AccordionItem>
@@ -73,28 +73,6 @@ export default function FAQ() {
           </motion.div>
         ))}
       </div>
-       {/* Decorative Background Blurs */}
-      <div
-        style={{
-          background:
-            "radial-gradient(ellipse at center,rgba(255, 0, 123, 0.07),rgba(255, 0, 157, 0.09),rgba(255, 255, 255, 1))",
-        }}
-        className="absolute top-0 left-90 w-[500px] h-[550px] rounded-full blur-3xl opacity-80 skew-x-32 dark:hidden"
-      ></div>
-      <div
-        style={{
-          background:
-            "radial-gradient(ellipse at bottom,rgba(0, 60, 255, 0.14),rgba(0, 68, 255, 0.12),rgba(255, 255, 255, 1))",
-        }}
-        className="absolute bottom-50 left-90 w-[200px] h-[250px] rounded-full blur-3xl opacity-80 skew-x-32 dark:hidden"
-      ></div>
-      <div
-        style={{
-          background:
-            "radial-gradient(ellipse at top,rgba(0, 115, 255, 0.15),rgba(0, 132, 255, 0.13),rgba(255, 255, 255, 1))",
-        }}
-        className="absolute top-0 right-0 w-[600px] h-[400px] rounded-full blur-3xl opacity-80 dark:hidden"
-      ></div>
     </div>
   );
 }

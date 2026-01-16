@@ -11,11 +11,13 @@ import { handleGoogleSignIn } from "@/lib/auth-client";
 import { toast } from "sonner";
 import Link from "next/link";
 import SkeletonProfile from "./SkeletonProfile";
+import { useRouter } from "next/navigation";
 
 
 export default function ProfilePage() {
   const { data: session, isPending, error } = authClient.useSession();
   const [mounted, setMounted] = useState(false);
+  const router = useRouter();
 
   useEffect(() => setMounted(true), []);
 
@@ -32,26 +34,33 @@ export default function ProfilePage() {
   if (!user) {
     return (
       <div className="flex flex-col items-center justify-center min-h-screen text-center">
-        <p className="text-lg text-gray-600 mb-6">You are not signed in</p>
+        <p className="text-lg mb-6">You are not signed in</p>
         <Button onClick={handleGoogleSignIn}>Sign in with Google</Button>
       </div>
     );
   }
 
   return (
-    <div className="min-h-screen flex flex-col items-center justify-center bg-gray-50 dark:bg-gray-950 py-20 px-4 ">
+    <div className="min-h-screen flex flex-col items-center justify-center py-20 px-4 ">
       <div className="relative max-w-7xl h-full mx-auto w-full mx-auto flex flex-col items-center">
-        <ArrowLeft className="size-12 rounded-lg text-gray-900 dark:text-gray-100 absolute top-0 left-0 md:left-4 hover:bg-gray-100 dark:hover:bg-gray-800 p-2" />
+        <button
+          type="button"
+          aria-label="Go back"
+          onClick={() => router.back()}
+          className="absolute top-0 left-0 md:left-4 p-2 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-400/10 "
+        >
+          <ArrowLeft className="size-10" />
+        </button>
         <motion.div
           initial={{ opacity: 0, y: 30 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.6 }}
           className="w-full max-w-md"
         >
-          <Card className="p-6 rounded-2xl dark:bg-gray-950 border border-gray-100 dark:border-gray-900">
+          <Card className="p-6 rounded-2xl">
             <CardHeader className="text-center">
               <div className="flex flex-col items-center gap-4">
-                <Avatar className="w-24 h-24 border-2 border-gray-300 dark:border-gray-800 ">
+                <Avatar className="w-24 h-24 border-2">
                   {user.image ? (
                     <AvatarImage
                       src={user.image}
@@ -65,11 +74,11 @@ export default function ProfilePage() {
                   )}
                 </Avatar>
 
-                <CardTitle className="text-2xl md:text-3xl font-bold text-gray-900 dark:text-gray-100">
+                <CardTitle className="text-2xl md:text-3xl font-bold">
                   {user.name || "Unnamed User"}
                 </CardTitle>
 
-                <p className="text-gray-500 dark:text-gray-400 text-sm md:text-base">
+                <p className="text-sm md:text-base">
                   {user.email || "No email available"}
                 </p>
               </div>
@@ -80,7 +89,7 @@ export default function ProfilePage() {
               </Link>
             </CardHeader>
 
-            <CardContent className="mt-6 space-y-4 text-gray-600 dark:text-gray-300">
+            <CardContent className="mt-6 space-y-4">
               <div className="flex justify-between items-center">
                 <span className="font-medium">Account Type</span>
                 <span>Google Account</span>

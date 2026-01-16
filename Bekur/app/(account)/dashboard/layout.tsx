@@ -17,11 +17,11 @@ export default function DashboardLayout({
 
   return (
     <SidebarProvider>
-      <div className="flex min-h-screen bg-gray-50 dark:bg-gray-950 w-full">
+      <div className="flex min-h-screen w-full">
         <SideBar />
 
         <SidebarInset>
-          <header className=" md:hidden absolute w-full top-0 z-50 left-0 bg-white dark:bg-gray-950 px-4 h-16 flex items-center justify-between">
+          <header className=" md:hidden absolute w-full top-0 z-50 left-0 px-4 h-16 flex items-center justify-between">
             <SidebarTrigger />
           </header>
 

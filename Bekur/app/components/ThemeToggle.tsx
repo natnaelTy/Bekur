@@ -33,7 +33,7 @@ export default function ThemeSwitcher() {
   return (
     <DropdownMenu open={open} onOpenChange={setOpen}>
       <DropdownMenuTrigger asChild>
-        <Button className="bg-transparent dark:bg-transparent rounded-md hover:bg-gray-100 dark:hover:bg-gray-900 text-black dark:text-white">
+        <Button className="bg-gray-50 dark:bg-gray-400/5 rounded-md hover:bg-gray-100 dark:hover:bg-gray-400/10 p-2 text-black dark:text-white">
           {value === "light" ? (
             <SunIcon />
           ) : value === "dark" ? (
@@ -43,14 +43,14 @@ export default function ThemeSwitcher() {
           )}
         </Button>
       </DropdownMenuTrigger>
-      <DropdownMenuContent className="dark:bg-gray-950">
-        <DropdownMenuItem onClick={() => select("light")} className=" hover:dark:bg-gray-900">
+      <DropdownMenuContent>
+        <DropdownMenuItem onClick={() => select("light")}>
           <SunIcon className="mr-2" /> Light
         </DropdownMenuItem>
-        <DropdownMenuItem onClick={() => select("system")} className=" hover:dark:bg-gray-900">
+        <DropdownMenuItem onClick={() => select("system")}>
           <LaptopMinimalIcon className="mr-2" /> System
         </DropdownMenuItem>
-        <DropdownMenuItem onClick={() => select("dark")} className=" hover:dark:bg-gray-900">
+        <DropdownMenuItem onClick={() => select("dark")}>
           <MoonIcon className="mr-2" /> Dark
         </DropdownMenuItem>
       </DropdownMenuContent>

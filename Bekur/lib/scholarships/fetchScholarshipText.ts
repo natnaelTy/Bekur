@@ -1,5 +1,3 @@
-
-
 export async function fetchScholarshipText(query: string): Promise<string> {
   const res = await fetch("https://google.serper.dev/search", {
     method: "POST",

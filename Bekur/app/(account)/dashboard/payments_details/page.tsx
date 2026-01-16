@@ -106,10 +106,10 @@ export default function PaymentPage() {
 
   return (
     <>
-      <div className="px-3 md:px-6 lg:px-10 w-full min-h-screen bg-gray-50 dark:bg-gray-950 text-gray-900 dark:text-white py-26 ">
+      <div className="px-3 md:px-6 lg:px-10 w-full min-h-screen py-26 ">
         <h1 className="text-3xl font-bold mb-6 text-left">Payment Details</h1>
 
-        <Card className="mx-auto border border-gray-200 dark:border-gray-800 bg-white dark:bg-gray-950 shadow-lg">
+        <Card className="mx-auto border shadow-lg">
           <CardHeader>
             <CardTitle className="flex items-center gap-2 text-lg font-semibold">
               <CreditCard className="w-5 h-5 text-blue-500" />
@@ -121,24 +121,24 @@ export default function PaymentPage() {
             {/* Payment Summary */}
             <div className="grid grid-cols-2 md:grid-cols-4 gap-4 text-sm">
               <div>
-                <p className="text-gray-500 dark:text-gray-400 mb-1">
+                <p className="mb-1">
                   Application Status
                 </p>
                 <Badge
                   variant="outline"
                   className={`${
                     status === "Interview Passed"
-                      ? "bg-green-100 text-green-700 dark:bg-green-900/40 dark:text-green-300 px-3"
+                      ? "bg-green-100 text-green-700 px-3"
                       : status === "Accepted"
-                      ? "bg-blue-100 text-blue-700 dark:bg-blue-900/40 dark:text-blue-300 px-3"
-                      : "bg-gray-100 text-gray-700 dark:bg-gray-800 dark:text-gray-300 px-3"
+                      ? "bg-blue-100 text-blue-700 px-3"
+                      : "bg-gray-100 text-gray-700 px-3"
                   }`}
                 >
                   {status}
                 </Badge>
               </div>
               <div>
-                <p className="text-gray-500 dark:text-gray-400">
+                <p>
                   Total Payment
                 </p>
                 <p className="font-semibold">
@@ -146,23 +146,23 @@ export default function PaymentPage() {
                 </p>
               </div>
               <div>
-                <p className="text-gray-500 dark:text-gray-400">
+                <p>
                   Prior Payment
                 </p>
-                <p className="text-green-600 dark:text-green-400 font-semibold">
+                <p className="text-green-600 font-semibold">
                   {priorPayment.toLocaleString()} ETB
                 </p>
               </div>
               <div>
-                <p className="text-gray-500 dark:text-gray-400">Remaining</p>
-                <p className="text-yellow-600 dark:text-yellow-400 font-semibold">
+                <p>Remaining</p>
+                <p className="text-yellow-600 font-semibold">
                   {remainingPayment.toLocaleString()} ETB
                 </p>
               </div>
             </div>
 
             {/* Payment Method */}
-            <div className="pt-6 border-t border-gray-200 dark:border-gray-800">
+            <div className="pt-6 border-t">
               <p className="font-semibold mb-2">Select Payment Method</p>
               <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
                 {[
@@ -175,8 +175,8 @@ export default function PaymentPage() {
                     key={method}
                     className={`flex items-center gap-2 p-2 rounded-md border cursor-pointer ${
                       selectedMethod === method
-                        ? "border-blue-600 bg-blue-50 dark:bg-blue-900/0"
-                        : "border-gray-300 dark:border-gray-700 hover:bg-gray-100 dark:hover:bg-gray-800"
+                        ? "border-blue-600"
+                        : ""
                     }`}
                   >
                     <Checkbox
@@ -196,11 +196,11 @@ export default function PaymentPage() {
               {selectedMethod &&
                 selectedMethod !== "Chapa Pay" &&
                 bankAccounts[selectedMethod] && (
-                  <div className="mt-4 p-3 rounded-md bg-gray-100 dark:bg-gray-900 border border-gray-300 dark:border-gray-700">
-                    <p className="text-gray-700 dark:text-gray-300 text-sm">
+                  <div className="mt-4 p-3 rounded-md border-1">
+                    <p className="text-sm">
                       Please make your payment to:
                     </p>
-                    <p className="font-semibold text-blue-600 dark:text-blue-400 mt-3 flex flex-col gap-1">
+                    <p className="font-semibold mt-3 flex flex-col gap-1">
                       <span>
                         Account Number: {bankAccounts[selectedMethod]}
                       </span>
@@ -217,10 +217,10 @@ export default function PaymentPage() {
             </div>
 
             {/* File Uploader */}
-            <div className="pt-6 border-t border-gray-200 dark:border-gray-800">
+            <div className="pt-6 border-t">
               <p className="font-semibold mb-3">Upload Screenshot or Invoice</p>
 
-              <div className="border-2 border-dashed border-gray-300 dark:border-gray-700 rounded-lg p-6 flex flex-col items-center justify-center">
+              <div className="border-2 border-dashed rounded-lg p-6 flex flex-col items-center justify-center">
                 {!file ? (
                   <>
                     <Upload className="w-10 h-10 text-gray-400 mb-3" />
@@ -246,7 +246,7 @@ export default function PaymentPage() {
                         alt="Preview"
                         width={160}
                         height={160}
-                        className="rounded-md border border-gray-200 dark:border-gray-700"
+                        className="rounded-md border border-gray-200"
                       />
                     )}
                     <p className="text-sm">{file.name}</p>
@@ -277,7 +277,7 @@ export default function PaymentPage() {
         </Card>
 
         {/* Note */}
-        <div className="mt-10 mx-auto mb-6 bg-red-100 dark:bg-red-900/30 border border-red-300 dark:border-red-700 text-red-700 dark:text-red-300 text-sm rounded-lg p-3">
+        <div className="mt-10 mx-auto mb-6 bg-red-400/5 text-red-700 text-sm rounded-lg p-3">
           <AlertTriangle className="inline w-4 h-4 mr-1" />
           If you fail your interview, you don’t need to pay again for the second
           round. If you pass and don’t complete the remaining payment, your
@@ -285,7 +285,7 @@ export default function PaymentPage() {
         </div>
 
         {/* Payment History */}
-        <div className="px-4 py-2 w-full rounded-md border border-gray-200 dark:border-gray-900 mx-auto mt-10">
+        <div className="px-4 py-2 w-full rounded-md border mx-auto mt-10">
           <p className="font-semibold mb-3">Payment History</p>
           <Table>
             <TableHeader>
@@ -306,8 +306,8 @@ export default function PaymentPage() {
                     <Badge
                       className={`${
                         p.status === "Completed"
-                          ? "bg-green-100 text-green-700 dark:bg-green-900/40 dark:text-green-300"
-                          : "bg-yellow-100 text-yellow-700 dark:bg-yellow-900/40 dark:text-yellow-300"
+                          ? "bg-green-100 text-green-700"
+                          : "bg-yellow-100 text-yellow-700"
                       }`}
                     >
                       {p.status}

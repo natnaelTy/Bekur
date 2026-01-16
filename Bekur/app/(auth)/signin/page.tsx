@@ -70,12 +70,12 @@ export default function signin() {
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.6 }}
-          className="bg-white dark:bg-gray-950 p-8 md:p-20 w-full max-w-[610px] relative"
+          className="p-8 md:p-20 w-full max-w-[610px] relative"
         >
-          <h1 className="text-3xl text-slate-800 font-bold text-left mb-4 dark:text-white">
+          <h1 className="text-3xl font-bold text-left mb-4">
             Welcome Back
           </h1>
-          <p className="text-left text-gray-600 dark:text-gray-400 mb-8">
+          <p className="text-left mb-8">
             Sign in to continue your study abroad journey.
           </p>
 
@@ -88,7 +88,7 @@ export default function signin() {
                 name="email"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel className="text-gray-700 dark:text-gray-300">
+                    <FormLabel>
                       Email
                     </FormLabel>
                     <FormControl>
@@ -113,7 +113,7 @@ export default function signin() {
                 name="password"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel className="text-gray-700 dark:text-gray-300">
+                    <FormLabel>
                       Password
                     </FormLabel>
                     <FormControl>
@@ -163,7 +163,7 @@ export default function signin() {
 
           {/* Google Login */}
           <div className="mt-8 text-center">
-            <p className="text-gray-600 dark:text-gray-400 mb-4">
+            <p className="mb-4">
               Or continue with
             </p>
             <Button
@@ -177,7 +177,7 @@ export default function signin() {
           </div>
 
           {/* Footer */}
-          <p className="text-center text-sm text-gray-600 dark:text-gray-400 mt-6">
+          <p className="text-center text-sm mt-6">
             Don’t have an account?{" "}
             <Link href="/signup" className="text-blue-600 hover:underline">
               Create one

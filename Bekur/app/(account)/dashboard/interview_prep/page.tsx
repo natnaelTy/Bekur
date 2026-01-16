@@ -58,9 +58,9 @@ export default function InterviewPrepPage() {
   };
 
   return (
-    <div className="min-h-screen bg-gray-50 dark:bg-gray-950 text-gray-900 dark:text-gray-100 py-26 px-3 md:px-8">
+    <div className="min-h-screen py-26 px-3 md:px-8">
       <h1 className="text-3xl font-bold mb-4">Interview Preparation</h1>
-      <p className="text-gray-600 dark:text-gray-400 mb-10 max-w-3xl">
+      <p className="mb-10 max-w-3xl">
         Prepare for your upcoming embassy or university interview. Below are
         your preparation steps, mock interview scheduler, and feedback section
         to help you succeed.
@@ -68,7 +68,7 @@ export default function InterviewPrepPage() {
 
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
         {/* Preparation Progress */}
-        <Card className="bg-white dark:bg-gray-950">
+        <Card>
           <CardHeader>
             <CardTitle>Preparation Progress</CardTitle>
             <CardDescription>
@@ -99,7 +99,7 @@ export default function InterviewPrepPage() {
         </Card>
 
         {/* interview scheduler */}
-        <Card className="bg-white dark:bg-gray-950">
+        <Card>
           <CardHeader>
             <CardTitle>Mock Interview Scheduling</CardTitle>
             <CardDescription>
@@ -124,7 +124,7 @@ export default function InterviewPrepPage() {
                     </Button>
                   </PopoverTrigger>
                   <PopoverContent
-                    className="w-auto overflow-hidden p-0 dark:bg-gray-950"
+                    className="w-auto overflow-hidden p-0"
                     align="start"
                   >
                     <Calendar
@@ -172,7 +172,7 @@ export default function InterviewPrepPage() {
         </Card>
 
         {/* document verification */}
-        <Card className="bg-white dark:bg-gray-950 lg:col-span-2">
+        <Card className="lg:col-span-2">
           <CardHeader>
             <CardTitle>Document Verification</CardTitle>
             <CardDescription>
@@ -200,7 +200,7 @@ export default function InterviewPrepPage() {
         </Card>
 
         {/* feedback */}
-        <Card className="bg-white dark:bg-gray-950 lg:col-span-2">
+        <Card className="lg:col-span-2">
           <CardHeader>
             <CardTitle>Interview Feedback</CardTitle>
             <CardDescription>
@@ -214,7 +214,7 @@ export default function InterviewPrepPage() {
                 value={feedback}
                 onChange={(e) => setFeedback(e.target.value)}
                 placeholder="Write feedback or reflections..."
-                className="min-h-[100px] bg-gray-100 dark:bg-gray-900"
+                className="min-h-[100px]"
               />
             </div>
             <Button

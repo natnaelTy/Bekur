@@ -79,7 +79,7 @@ export default function PricingPage() {
   ];
 
   return (
-    <div className="min-h-screen bg-gray-50 dark:bg-gray-950 text-slate-900 dark:text-white flex flex-col items-center">
+    <div className="min-h-screen flex flex-col items-center">
       {/* Hero Section */}
       <section className="text-center py-20 px-6 max-w-4xl">
         <motion.h1
@@ -94,7 +94,7 @@ export default function PricingPage() {
           initial={{ opacity: 0, y: 10 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.8 }}
-          className="text-base md:text-lg text-gray-700 dark:text-gray-300 leading-relaxed"
+          className="text-base md:text-lg leading-relaxed"
         >
           Our pricing is transparent and based on your preferred study region.
           Whether it’s Eastern Europe, Asia, or beyond — we make your study
@@ -114,8 +114,8 @@ export default function PricingPage() {
             <Card
               className={
                 index === 1
-                  ? "bg-white dark:bg-gray-950 border-2 border-blue-500 dark:border-blue-600 backdrop-blur-xl rounded-2xl h-full max-w-sm hover:shadow-xl transition-all flex flex-col"
-                  : "bg-white dark:bg-gray-950 border border-gray-100 dark:border-gray-900 backdrop-blur-xl rounded-2xl h-full max-w-sm hover:shadow-xl transition-all flex flex-col"
+                  ? "border-1 border-blue-500 dark:border-blue-600 backdrop-blur-xl rounded-2xl h-full max-w-sm hover:shadow-xl transition-all flex flex-col"
+                  : "border backdrop-blur-xl rounded-2xl h-full max-w-sm hover:shadow-xl transition-all flex flex-col"
               }
             >
               {/* popular */}
@@ -134,7 +134,7 @@ export default function PricingPage() {
                   {plan.countries.map((country) => (
                     <span
                       key={country.name}
-                      className="bg-gray-50 dark:bg-gray-900 px-3 py-1 rounded-full text-sm flex items-center gap-1"
+                      className="px-3 py-1 rounded-full text-sm flex items-center gap-1"
                     >
                       <Flag emoji={country.flag} /> {country.name}
                     </span>
@@ -166,7 +166,7 @@ export default function PricingPage() {
       </section>
 
       {/* CTA Section */}
-      <section className="w-full py-20 px-6 bg-gradient-to-r from-blue-800 to-sky-700 text-center text-white rounded-t-3xl mt-16">
+      <section className="w-full py-20 px-6 bg-gray-50 dark:bg-black/8 text-center rounded-t-3xl mt-16">
         <motion.h2
           initial={{ opacity: 0, y: 10 }}
           animate={{ opacity: 1, y: 0 }}

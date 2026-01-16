@@ -30,8 +30,8 @@ export default function SettingsPage() {
   const user = session?.user;
 
   return (
-    <div className="space-y-6 py-28 dark:bg-gray-950 min-h-screen w-full">
-      <div className="max-w-7xl px-4 w-full mx-auto dark:bg-gray-950">
+    <div className="space-y-6 py-28 min-h-screen w-full">
+      <div className="max-w-7xl px-4 w-full mx-auto">
         <h1 className="text-3xl font-bold mb-2">Account Settings</h1>
         <p className="text-muted-foreground">
           Manage your personal information, security, and preferences.
@@ -78,11 +78,11 @@ export default function SettingsPage() {
               animate={{ opacity: 1, y: 0 }}
               exit={{ opacity: 0, y: -10 }}
               transition={{ duration: 0.25 }}
-              className="mt-6 bg-gray-50 dark:bg-gray-950"
+              className="mt-6"
             >
               {/* Profile Tab */}
               <TabsContent value="profile">
-                <Card className="dark:bg-gray-950">
+                <Card>
                   <CardHeader>
                     <CardTitle>Profile Information</CardTitle>
                   </CardHeader>
@@ -135,7 +135,7 @@ export default function SettingsPage() {
 
               {/* Security Tab */}
               <TabsContent value="security">
-                <Card className="dark:bg-gray-950">
+                <Card>
                   <CardHeader>
                     <CardTitle>Security Settings</CardTitle>
                   </CardHeader>
@@ -156,7 +156,7 @@ export default function SettingsPage() {
                       <AlertDialogTrigger asChild>
                         <Button variant="destructive">Delete Account</Button>
                       </AlertDialogTrigger>
-                      <AlertDialogContent className="dark:bg-gray-950">
+                      <AlertDialogContent>
                         <AlertDialogHeader>
                           <AlertDialogTitle>
                             Are you absolutely sure?
@@ -179,7 +179,7 @@ export default function SettingsPage() {
 
               {/* Notifications Tab */}
               <TabsContent value="notifications">
-                <Card className="dark:bg-gray-950">
+                <Card>
                   <CardHeader>
                     <CardTitle>Notification Preferences</CardTitle>
                   </CardHeader>
@@ -203,7 +203,7 @@ export default function SettingsPage() {
 
               {/* Payments Tab */}
               <TabsContent value="payments">
-                <Card className="dark:bg-gray-950">
+                <Card>
                   <CardHeader>
                     <CardTitle>Payment History</CardTitle>
                   </CardHeader>
@@ -230,7 +230,7 @@ export default function SettingsPage() {
 
               {/* Support Tab */}
               <TabsContent value="support">
-                <Card className="dark:bg-gray-950">
+                <Card>
                   <CardHeader>
                     <CardTitle>Support</CardTitle>
                   </CardHeader>

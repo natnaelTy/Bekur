@@ -15,6 +15,7 @@ import { Button } from "@/components/ui/button";
 import { useEffect, useState } from "react";
 import { Search } from "lucide-react";
 import axios from "axios";
+import { Skeleton } from "@/components/ui/skeleton";
 import {
   AlertDialog,
   AlertDialogContent,
@@ -37,10 +38,14 @@ type Applicant = {
   hasPassport?: boolean;
 };
 import dateFormate from "@/utils/DateFormate";
+import { adminAPI } from "@/utils/adminAPI";
+
+
 
 export default function AllApplicantsPage() {
   const [search, setSearch] = useState("");
   const [applicants, setApplicants] = useState<Applicant[]>([]);
+  const [isLoading, setIsLoading] = useState(true);
   const [dialogOpen, setDialogOpen] = useState(false);
   const [selectedApplicant, setSelectedApplicant] = useState<Applicant | null>(
     null
@@ -48,9 +53,15 @@ export default function AllApplicantsPage() {
 
   useEffect(() => {
     async function fetchApplicants() {
-      const res = await axios.get("/api/admin/apply");
-      const data = await res.data.allApplications;
-      setApplicants(data);
+      try {
+        const res = await adminAPI.get("/apply");
+        const data = await res.data.allApplications;
+        setApplicants(data);
+      } catch (error) {
+        console.error("Error fetching applicants:", error);
+      } finally {
+        setIsLoading(false);
+      }
     }
 
     fetchApplicants();
@@ -151,47 +162,73 @@ export default function AllApplicantsPage() {
               </TableRow>
             </TableHeader>
             <TableBody>
-              {filteredApplicants.map((applicant) => {
-                const primaryApplication =
-                  applicant.scholarshipApplications?.[0];
-                const status = primaryApplication?.status;
+              {isLoading
+                ? Array.from({ length: 10 }).map((_, idx) => (
+                    <TableRow key={`skeleton-${idx}`}>
+                      <TableCell>
+                        <Skeleton className="h-4 w-32" />
+                      </TableCell>
+                      <TableCell>
+                        <Skeleton className="h-4 w-40" />
+                      </TableCell>
+                      <TableCell>
+                        <Skeleton className="h-4 w-36" />
+                      </TableCell>
+                      <TableCell>
+                        <Skeleton className="h-4 w-20" />
+                      </TableCell>
+                      <TableCell>
+                        <Skeleton className="h-4 w-28" />
+                      </TableCell>
+                      <TableCell className="text-right">
+                        <div className="flex justify-end gap-2">
+                          <Skeleton className="h-8 w-16" />
+                        </div>
+                      </TableCell>
+                    </TableRow>
+                  ))
+                : filteredApplicants.map((applicant) => {
+                    const primaryApplication =
+                      applicant.scholarshipApplications?.[0];
+                    const status = primaryApplication?.status;
 
-                return (
-                  <TableRow key={applicant.id}>
-                    <TableCell className="font-medium">
-                      {applicant.fullName}
-                    </TableCell>
-                    <TableCell>{applicant.email}</TableCell>
-                    <TableCell>{applicant.country_applying_to}</TableCell>
-                    <TableCell>
-                      <Badge
-                        className={`px-3 py-1 rounded-full text-xs ${
-                          status === "APPROVED" || status === "IN_PROGRESS"
-                            ? "bg-yellow-400/10 text-yellow-400 border border-yellow-400/20"
-                            : status === "SUBMITTED"
-                            ? "bg-gray-400/10 text-gray-400 border border-gray-400/20"
-                            : status === "REJECTED"
-                            ? "bg-red-400/10 text-red-400 border border-red-400/20"
-                            : ""
-                        }`}
-                      >
-                        {status ?? "N/A"}
-                      </Badge>
-                    </TableCell>
-                    <TableCell>{dateFormate(applicant.createdAt)}</TableCell>
-                    <TableCell className="text-right space-x-2">
-                      <Button
-                        size="sm"
-                        className="bg-blue-400"
-                        onClick={() => openDialog(applicant)}
-                      >
-                        View
-                      </Button>
-                    </TableCell>
-                  </TableRow>
-                );
-              })}
-              {filteredApplicants.length === 0 && (
+                    return (
+                      <TableRow key={applicant.id}>
+                        <TableCell className="font-medium">
+                          {applicant.fullName}
+                        </TableCell>
+                        <TableCell>{applicant.email}</TableCell>
+                        <TableCell>{applicant.country_applying_to}</TableCell>
+                        <TableCell>
+                          <Badge
+                            className={`px-3 py-1 rounded-full text-xs ${
+                              status === "APPROVED" ||
+                              status === "IN_PROGRESS"
+                                ? "bg-yellow-400/10 text-yellow-400 border border-yellow-400/20"
+                                : status === "SUBMITTED"
+                                ? "bg-gray-400/10 text-gray-400 border border-gray-400/20"
+                                : status === "REJECTED"
+                                ? "bg-red-400/10 text-red-400 border border-red-400/20"
+                                : ""
+                            }`}
+                          >
+                            {status ?? "N/A"}
+                          </Badge>
+                        </TableCell>
+                        <TableCell>{dateFormate(applicant.createdAt)}</TableCell>
+                        <TableCell className="text-right space-x-2">
+                          <Button
+                            size="sm"
+                            className="bg-blue-400"
+                            onClick={() => openDialog(applicant)}
+                          >
+                            View
+                          </Button>
+                        </TableCell>
+                      </TableRow>
+                    );
+                  })}
+              {filteredApplicants.length === 0 && !isLoading && (
                 <TableRow>
                   <TableCell
                     colSpan={6}

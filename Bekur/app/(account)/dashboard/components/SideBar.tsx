@@ -3,6 +3,8 @@
 import {
   Sidebar,
   SidebarContent,
+  SidebarFooter,
+  SidebarHeader,
   SidebarGroup,
   SidebarGroupLabel,
   SidebarGroupContent,
@@ -11,127 +13,66 @@ import {
   SidebarMenuButton,
 } from "@/components/ui/sidebar";
 import {
-  LayoutDashboard,
-  FileText,
-  CreditCard,
-  GraduationCap,
-  Settings,
-  LogOut,
-} from "lucide-react";
+  IconLayoutDashboard,
+  IconFileDescription,
+  IconCreditCard,
+  IconBrandSpacehey,
+  IconSettings,
+  IconLogout,
+} from "@tabler/icons-react";
 import Link from "next/link";
-import { useState } from "react";
 import { signOut } from "@/lib/auth-client";
+import Image from "next/image";
+import { NavMain } from "@/components/nav-main";
 export default function SideBar() {
-  const [isOpen, setIsOpen] = useState(false);
-
   return (
     <>
-      <Sidebar
-        className={`fixed left-0 top-0 h-screen bg-gray-950 text-white z-40 transform transition-transform duration-300 ${
-          isOpen ? "translate-x-0" : "-translate-x-full md:translate-x-0"
-        }`}
-      >
-        <SidebarContent className="flex flex-col h-full justify-between bg-white dark:bg-gray-950">
-          <div>
-            <SidebarGroup>
-              <SidebarGroupLabel className="text-blue-500 font-bold text-lg mb-8 uppercase tracking-wide px-4 mt-4">
-                Client Dashboard
-              </SidebarGroupLabel>
+      <Sidebar collapsible="offcanvas">
+        <SidebarHeader>
+          <SidebarMenu>
+            <SidebarMenuItem>
+              <SidebarMenuButton className="data-[slot=sidebar-menu-button]:!p-1.5">
+                <span className="text-base font-semibold flex items-center gap-2">
+                  <Image src="/bekur.png" width={120} height={120} alt="Bekur" />
+                </span>
+              </SidebarMenuButton>
+            </SidebarMenuItem>
+          </SidebarMenu>
+        </SidebarHeader>
 
-              <SidebarGroupContent>
-                <SidebarMenu className="flex flex-col gap-2 text-gray-900 dark:text-gray-100">
-                  <SidebarMenuItem>
-                    <SidebarMenuButton
-                      asChild
-                      className="text-base hover:bg-gray-100 dark:hover:bg-gray-900 flex items-center gap-3 px-4 py-2 rounded-md"
-                    >
-                      <Link href="/dashboard" onClick={() => setIsOpen(false)}>
-                        <LayoutDashboard className="w-5 h-5" />
-                        Overview
-                      </Link>
-                    </SidebarMenuButton>
-                  </SidebarMenuItem>
+        <SidebarContent className="flex flex-col h-full">
+          <SidebarGroup>
+            <NavMain
+              items={[
+                { title: "Overview", url: "/dashboard", icon: IconLayoutDashboard },
+                { title: "Application Details", url: "/dashboard/application_details", icon: IconFileDescription },
+                { title: "Payments Details", url: "/dashboard/payments_details", icon: IconCreditCard },
+                { title: "Interview Prep", url: "/dashboard/interview_prep", icon: IconBrandSpacehey },
+              ]}
+            />
+          </SidebarGroup>
+        </SidebarContent>
 
-                  <SidebarMenuItem>
-                    <SidebarMenuButton
-                      asChild
-                      className="text-base hover:bg-gray-100 dark:hover:bg-gray-900 flex items-center gap-3 px-4 py-2 rounded-md"
-                    >
-                      <Link
-                        href="/dashboard/application_details"
-                        onClick={() => setIsOpen(false)}
-                      >
-                        <FileText className="w-5 h-5" />
-                        Application Details
-                      </Link>
-                    </SidebarMenuButton>
-                  </SidebarMenuItem>
-
-                  <SidebarMenuItem>
-                    <SidebarMenuButton
-                      asChild
-                      className="text-base hover:bg-gray-100 dark:hover:bg-gray-900 flex items-center gap-3 px-4 py-2 rounded-md"
-                    >
-                      <Link
-                        href="/dashboard/payments_details"
-                        onClick={() => setIsOpen(false)}
-                      >
-                        <CreditCard className="w-5 h-5" />
-                        Payments Details
-                      </Link>
-                    </SidebarMenuButton>
-                  </SidebarMenuItem>
-
-                  <SidebarMenuItem>
-                    <SidebarMenuButton
-                      asChild
-                      className="text-base hover:bg-gray-100 dark:hover:bg-gray-900 flex items-center gap-3 px-4 py-2 rounded-md"
-                    >
-                      <Link
-                        href="/dashboard/interview_prep"
-                        onClick={() => setIsOpen(false)}
-                      >
-                        <GraduationCap className="w-5 h-5" />
-                        Interview Prep
-                      </Link>
-                    </SidebarMenuButton>
-                  </SidebarMenuItem>
-                </SidebarMenu>
-              </SidebarGroupContent>
-            </SidebarGroup>
-          </div>
-
-          <div className="px-4 mb-4 text-gray-900 dark:text-gray-100">
+        <SidebarFooter>
+          <div className="px-2 mb-2 text-gray-900 dark:text-gray-100">
             <SidebarMenu>
               <SidebarMenuItem>
-                <SidebarMenuButton
-                  asChild
-                  className="text-base hover:bg-gray-100 dark:hover:bg-gray-900 flex items-center gap-3 px-4 py-2 rounded-md"
-                >
-                  <Link
-                    href="/dashboard/settings"
-                    onClick={() => setIsOpen(false)}
-                  >
-                    <Settings className="w-5 h-5" />
-                    Settings
+                <SidebarMenuButton asChild className="text-base flex items-center gap-3 px-3 py-2 rounded-md">
+                  <Link href="/dashboard/settings">
+                    <IconSettings className="w-5 h-5" />
+                    <span>Settings</span>
                   </Link>
                 </SidebarMenuButton>
               </SidebarMenuItem>
-
               <SidebarMenuItem>
-                <SidebarMenuButton
-                  asChild
-                  className="text-base hover:bg-gray-100 dark:hover:bg-gray-900 flex items-center gap-3 px-4 py-2 rounded-md"
-                >
-                  <button onClick={() => signOut()} className="flex items-center gap-3">
-                    <LogOut className="w-5 h-5" />
-                    Logout
-                  </button>
+                <SidebarMenuButton className="text-base flex items-center gap-3 px-3 py-2 rounded-md" onClick={() => signOut()}>
+                  <IconLogout className="w-5 h-5" />
+                  <span>Logout</span>
                 </SidebarMenuButton>
               </SidebarMenuItem>
             </SidebarMenu>
           </div>
-        </SidebarContent>
+        </SidebarFooter>
       </Sidebar>
     </>
   );

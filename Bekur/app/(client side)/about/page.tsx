@@ -33,7 +33,7 @@ export default function AboutPage() {
   ];
 
   return (
-    <div className="min-h-screen bg-gray-50 dark:bg-gray-950 text-slate-900 dark:text-white flex flex-col items-center">
+    <div className="min-h-screen flex flex-col items-center">
       {/* Hero Section */}
       <section className="text-center py-20 px-6 max-w-4xl">
         <motion.h1
@@ -48,7 +48,7 @@ export default function AboutPage() {
           initial={{ opacity: 0, y: 10 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.8 }}
-          className="text-lg md:text-xl text-gray-700 dark:text-gray-300 leading-relaxed"
+          className="text-lg md:text-xl leading-relaxed"
         >
           We’re on a mission to make studying, attending events, and exploring
           opportunities abroad simpler, faster, and accessible to everyone —
@@ -70,7 +70,7 @@ export default function AboutPage() {
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           transition={{ duration: 0.6 }}
-          className="text-gray-700 dark:text-gray-400 text-lg leading-relaxed mb-8"
+          className="text-lg leading-relaxed mb-8"
         >
           It all began with a simple idea — helping students find scholarships
           and global opportunities without the frustration of endless searches
@@ -106,7 +106,7 @@ export default function AboutPage() {
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.5, delay: index * 0.15 }}
             >
-              <Card className="bg-white dark:bg-gray-950 border-gray-200 dark:border-gray-900 backdrop-blur-xl rounded-2xl h-full hover:shadow-lg transition-all">
+              <Card className="backdrop-blur-xl rounded-2xl h-full hover:shadow-lg transition-all">
                 <CardContent className="p-4 flex flex-col items-center text-center gap-3">
                   {value.icon}
                   <h3 className="text-xl font-semibold">{value.title}</h3>
@@ -121,7 +121,7 @@ export default function AboutPage() {
       </section>
 
       {/* Call to Action Section */}
-      <section className="w-full py-20 px-6 bg-gradient-to-r from-blue-800 to-sky-700 text-center text-white rounded-t-3xl mt-16 relative overflow-hidden">
+      <section className="w-full py-20 px-6 bg-gray-50 dark:bg-black/8 text-center rounded-t-3xl mt-16 relative overflow-hidden">
         <motion.h2
           initial={{ opacity: 0, y: 10 }}
           animate={{ opacity: 1, y: 0 }}
@@ -134,7 +134,7 @@ export default function AboutPage() {
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           transition={{ delay: 0.3 }}
-          className="max-w-2xl mx-auto mb-8 text-gray-200"
+          className="max-w-2xl mx-auto mb-8"
         >
           Start your journey today and let AI help you find the scholarship or
           conference that changes your life.
@@ -142,14 +142,6 @@ export default function AboutPage() {
         <button className="secondaryBtn">
           Get Started
         </button>
-        {/* Decorative Background Blurs */}
-        <div
-          style={{
-            background:
-              "radial-gradient(ellipse at center,rgba(0, 166, 255, 0.21),rgba(0, 174, 255, 0.22),rgba(255, 255, 255, 1))",
-          }}
-          className="absolute top-10 right-40 w-[200px] h-[200px] rounded-full blur-3xl opacity-80 skew-x-32"
-        ></div>
       </section>
     </div>
   );

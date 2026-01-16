@@ -69,12 +69,12 @@ export default function AdminSignin() {
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.6 }}
-          className="bg-white dark:bg-gray-950 p-8 md:p-20 w-full max-w-[610px] relative"
+          className="p-8 md:p-20 w-full max-w-[610px] relative"
         >
-          <h1 className="text-2xl text-slate-800 font-bold text-left mb-2 dark:text-white">
+          <h1 className="text-2xl font-bold text-left mb-2">
             Welcome to Bekur Admin Panel
           </h1>
-          <p className="text-left text-gray-600 dark:text-gray-400 mb-8">
+          <p className="text-left mb-8">
             Sign in to manage users, applications, and settings
           </p>
 
@@ -85,7 +85,7 @@ export default function AdminSignin() {
                 name="email"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel className="text-gray-700 dark:text-gray-300">
+                    <FormLabel>
                       Email
                     </FormLabel>
                     <FormControl>
@@ -109,7 +109,7 @@ export default function AdminSignin() {
                 name="password"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel className="text-gray-700 dark:text-gray-300">
+                    <FormLabel>
                       Password
                     </FormLabel>
                     <FormControl>

@@ -76,20 +76,20 @@ export default function NotificationsPage() {
   };
 
   return (
-    <div className="min-h-screen bg-gray-50 dark:bg-gray-950  text-gray-900 dark:text-gray-100 ">
+    <div className="min-h-screen">
       <div className="max-w-7xl mx-auto w-full py-26 lg:py-30 px-3 md:px-6">
       <div className="flex justify-between items-center mb-6">
         <h1 className="text-3xl font-bold">Notifications</h1>
         <Button
           variant="outline"
           onClick={handleMarkAllAsRead}
-          className="border-gray-700 dark:border-gray-200"
+          className="border-gray-700"
         >
           <Check className="w-4 h-4 mr-2" /> Mark all as read
         </Button>
       </div>
 
-      <Card className="bg-white dark:bg-gray-950 shadow-md">
+      <Card className="shadow-md">
         <CardHeader>
           <CardTitle>Recent Updates</CardTitle>
           <CardDescription>Stay up to date with your application journey.</CardDescription>
@@ -102,16 +102,16 @@ export default function NotificationsPage() {
               className={`flex items-start gap-3 py-4 transition-all ${
                 notif.read
                   ? "opacity-70"
-                  : "bg-gray-100 dark:bg-gray-900 rounded-lg px-3"
+                  : "rounded-lg px-3"
               }`}
             >
               {getIcon(notif.category)}
               <div className="flex-1">
                 <h3 className="font-semibold text-base">{notif.title}</h3>
-                <p className="text-sm text-gray-600 dark:text-gray-400">
+                <p className="text-sm">
                   {notif.message}
                 </p>
-                <div className="flex items-center justify-between mt-2 text-xs text-gray-500">
+                <div className="flex items-center justify-between mt-2 text-xs">
                   <span>{formatDistanceToNow(notif.time, { addSuffix: true })}</span>
                   {!notif.read && (
                     <Badge variant="secondary" className="bg-blue-600 text-white">

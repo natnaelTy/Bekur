@@ -100,8 +100,8 @@ export default function Navbar() {
     <div
       className={
         showNavBar
-          ? "flex items-center justify-between w-full py-4 md:py-10 fixed bg-white shadow-sm dark:bg-gray-950 dark:border-b-1 dark:border-gray-900 top-0 left-0 z-10 h-16 px-2"
-          : "bg-transparent flex items-center justify-between w-full py-4 md:py-10 fixed dark:bg-transparent top-0 left-0 z-10 h-16 px-2"
+          ? "flex items-center justify-between w-full py-4 md:py-10 fixed shadow-sm top-0 left-0 z-10 h-16 px-2 bg-white dark:bg-black/5 backdrop-blur-sm"
+          : "bg-transparent flex items-center justify-between w-full py-4 md:py-10 fixed top-0 left-0 z-10 h-16 px-2"
       }
     >
       <div className="max-w-7xl w-full flex items-center justify-between mx-auto">
@@ -128,7 +128,7 @@ export default function Navbar() {
         </ul>
 
         <div
-          className={`md:hidden absolute top-16 left-0 w-full bg-white dark:bg-gray-950 border-b-1 border-gray-200 dark:border-gray-900 transition-all duration-300 ease-in-out overflow-hidden ${
+          className={`md:hidden absolute top-16 left-0 w-full border-b-1 transition-all duration-300 ease-in-out overflow-hidden ${
             showDropdown ? "max-h-screen" : "max-h-0"
           }`}
         >
@@ -150,7 +150,7 @@ export default function Navbar() {
             <div className="space-x-6 hidden md:block">
               <Link
                 href="/signin"
-                className="px-4 py-2 bg-transparent rounded-full hover:bg-gray-100 transition cursor-pointer font-medium text-sm dark:hover:bg-slate-800 dark:text-white"
+                className="px-4 py-2 bg-transparent rounded-full hover:bg-gray-100 transition cursor-pointer font-medium text-sm"
               >
                 Sign in
               </Link>

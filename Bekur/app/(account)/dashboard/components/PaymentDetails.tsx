@@ -10,7 +10,7 @@ export default function PaymentDetails() {
   };
 
   return (
-    <Card className="bg-white dark:bg-gray-950">
+    <Card>
       <CardHeader>
         <CardTitle>Payment Details</CardTitle>
       </CardHeader>
@@ -20,8 +20,8 @@ export default function PaymentDetails() {
           <span
             className={`${
               payment.status === "Paid"
-                ? "text-green-500 bg-green-100 dark:text-green-400 dark:bg-gray-900 px-3 py-1 rounded-full"
-                : "text-yellow-400 bg-yellow-100 dark:bg-gray-900 px-3 py-0.5 rounded-full"
+                ? "text-green-500 bg-green-100 dark:text-green-400 dark:bg-gray-400/20 px-3 py-1 rounded-full"
+                : "text-yellow-400 bg-yellow-100 dark:bg-gray-400/20 px-3 py-0.5 rounded-full"
             }`}
           >
             {payment.status}
@@ -30,15 +30,15 @@ export default function PaymentDetails() {
 
         <p className="text-sm md:text-base font-semibold">
           Amount:{" "}
-          <span className="text-green-600">
+          <span className="text-green-600 dark:text-green-400 font-normal">
             {payment.amount}
           </span>
         </p>
         <p className="text-sm md:text-base font-semibold">
-          Method: <span className="text-gray-700 dark:text-gray-500 font-normal">{payment.method}</span>
+          Method: <span className="font-normal">{payment.method}</span>
         </p>
         <p className="text-sm md:text-base font-semibold">
-          Date: <span className="text-gray-700 dark:text-gray-500 font-normal">{payment.date}</span>
+          Date: <span className="font-normal">{payment.date}</span>
         </p>
       </CardContent>
     </Card>

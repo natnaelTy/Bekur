@@ -14,13 +14,13 @@ export default function Scholarships({ hasApplied }: { hasApplied: boolean }) {
   const list = hasApplied ? related : suggested;
 
   return (
-    <Card className="bg-white dark:bg-gray-950">
+    <Card>
       <CardHeader>
         <CardTitle>{hasApplied ? "Related Scholarships" : "Suggested Scholarships"}</CardTitle>
       </CardHeader>
       <CardContent className="space-y-3">
         {list.map((item) => (
-          <div key={item.name} className="p-3 border rounded-lg hover:bg-gray-50 dark:hover:bg-gray-900 transition-colors">
+          <div key={item.name} className="p-3 border rounded-lg transition-colors">
             <p className="font-medium">{item.name}</p>
             <p className="text-sm text-gray-700 dark:text-gray-400">Deadline: {item.deadline}</p>
           </div>

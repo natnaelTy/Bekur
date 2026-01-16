@@ -64,14 +64,14 @@ export function GetUser() {
           )}
         </Button>
       </DropdownMenuTrigger>
-      <DropdownMenuContent className="w-56 dark:bg-gray-950" align="start">
+      <DropdownMenuContent className="w-56" align="start">
         <DropdownMenuLabel>
           {isAuthenticated && user ? (
             <div className="flex items-center gap-2 justify-center">
               <UserAvatar user={user} />
               <div className="flex flex-col space-y-1">
                 <span className="font-medium">{user.name}</span>
-                <span className="text-xs text-gray-500 dark:text-gray-400">
+                <span className="text-xs">
                   {user.email}
                 </span>
               </div>
@@ -81,39 +81,39 @@ export function GetUser() {
           )}
         </DropdownMenuLabel>
         <DropdownMenuGroup>
-          <DropdownMenuItem className="dark:hover:bg-gray-900">
+          <DropdownMenuItem>
             <IconUser className="h-5 w-5" />
             <Link href="/profile">View Profile</Link>
             <DropdownMenuShortcut>⇧⌘P</DropdownMenuShortcut>
           </DropdownMenuItem>
-          <DropdownMenuItem className="dark:hover:bg-gray-900">
+          <DropdownMenuItem>
             <LayoutDashboard className="h-5 w-5" />
             <Link href="/dashboard">Dashboard</Link>
             <DropdownMenuShortcut>⌘D</DropdownMenuShortcut>
           </DropdownMenuItem>
-          <DropdownMenuItem className="dark:hover:bg-gray-900">
+          <DropdownMenuItem>
             <Settings className="h-5 w-5" />
             <Link href="/settings">Settings</Link>
             <DropdownMenuShortcut>⌘S</DropdownMenuShortcut>
           </DropdownMenuItem>
-          <DropdownMenuItem className="dark:hover:bg-gray-900">
+          <DropdownMenuItem>
             <IconFilePencil className="h-5 w-5" />
             <Link href="/apply">Apply</Link>
             <DropdownMenuShortcut>⌘A</DropdownMenuShortcut>
           </DropdownMenuItem>
-          <DropdownMenuItem className="dark:hover:bg-gray-900">
+          <DropdownMenuItem>
             <Bell className="h-5 w-5" />
             <Link href="/notifications">Notifications</Link>
             <DropdownMenuShortcut>⌘N</DropdownMenuShortcut>
           </DropdownMenuItem>
         </DropdownMenuGroup>
         <DropdownMenuSeparator />
-        <DropdownMenuItem className="dark:hover:bg-gray-900">
+        <DropdownMenuItem>
           <BiSupport className="h-5 w-5" />
           <Link href="/support">Support</Link>
         </DropdownMenuItem>
         <DropdownMenuSeparator />
-        <DropdownMenuItem onClick={() => signOut()} className="dark:hover:bg-gray-900">
+        <DropdownMenuItem onClick={() => signOut()}>
           <LogOut className="h-5 w-5" />
           Sign out
           <DropdownMenuShortcut>⇧⌘S</DropdownMenuShortcut>

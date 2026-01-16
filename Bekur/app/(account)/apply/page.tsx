@@ -169,13 +169,13 @@ export default function ApplyPage() {
   }
 
   return (
-    <div className="min-h-screen bg-gray-50 dark:bg-gray-950 py-10 px-3 flex justify-center py-26 relative overflow-hidden">
-      <Card className="max-w-xl w-full z-1 bg-white dark:bg-gray-950 rounded-md border border-gray-100 dark:border-gray-900 h-full">
+    <div className="min-h-screen py-10 px-3 flex justify-center py-26 relative overflow-hidden">
+      <Card className="max-w-3xl w-full z-1 rounded-md border h-full">
         <CardHeader>
-          <CardTitle className="text-2xl font-bold text-gray-900 dark:text-white">
+          <CardTitle className="text-2xl font-bold">
             Apply for Scholarship
           </CardTitle>
-          <p className="text-gray-600 dark:text-gray-400 text-sm md:text-base mt-1">
+          <p className="text-sm md:text-base mt-1">
             Fill in your details carefully — you can only apply once.
           </p>
         </CardHeader>
@@ -191,7 +191,7 @@ export default function ApplyPage() {
                 <Input
                   type="text"
                   {...register("fullName")}
-                  className="mt-2 bg-gray-50 dark:bg-gray-900/50"
+                  className="mt-2"
                 />
                 {errors.fullName && (
                   <p className="text-sm text-red-600 mt-1">
@@ -204,7 +204,7 @@ export default function ApplyPage() {
                 <Input
                   type="email"
                   {...register("email")}
-                  className="mt-2 bg-gray-50 dark:bg-gray-900/50"
+                  className="mt-2"
                 />
                 {errors.email && (
                   <p className="text-red-600">{errors.email.message}</p>
@@ -219,7 +219,7 @@ export default function ApplyPage() {
                   type="tel"
                   {...register("phone")}
                   required
-                  className="mt-2 bg-gray-50 dark:bg-gray-900/50"
+                  className="mt-2"
                 />
                 {errors.phone && (
                   <p className="text-red-600">{errors.phone.message}</p>
@@ -232,7 +232,7 @@ export default function ApplyPage() {
                 <Popover>
                   <PopoverTrigger
                     asChild
-                    className="mt-1 bg-gray-50 dark:bg-gray-900/50 dark:hover:bg-gray-800/50"
+                    className="mt-1"
                   >
                     <Button
                       variant={"outline"}
@@ -246,7 +246,7 @@ export default function ApplyPage() {
                         : "Select date of birth"}
                     </Button>
                   </PopoverTrigger>
-                  <PopoverContent className="w-auto p-0 bg-white dark:bg-gray-950">
+                  <PopoverContent className="w-auto p-0">
                     <Calendar
                       mode="single"
                       selected={watch("dateOfBirth")}
@@ -267,13 +267,12 @@ export default function ApplyPage() {
             <div>
               <Label>Country Applying To</Label>
               <Select onValueChange={(val) => setValue("country", val)}>
-                <SelectTrigger className="mt-2 bg-gray-50 dark:bg-gray-900/50 w-full">
+                <SelectTrigger className="mt-2 w-full">
                   <SelectValue placeholder="Select a country" />
                 </SelectTrigger>
-                <SelectContent className="dark:bg-gray-950">
+                <SelectContent>
                   {countries.map((country) => (
                     <SelectItem
-                      className="hover:dark:bg-gray-900"
                       key={country.id}
                       value={country.name}
                     >
@@ -295,14 +294,14 @@ export default function ApplyPage() {
                   setValue("hasPassport", val as "yes" | "no")
                 }
               >
-                <SelectTrigger className="mt-2 bg-gray-50 dark:bg-gray-900/50 w-full">
+                <SelectTrigger className="mt-2 w-full">
                   <SelectValue placeholder="Select one" />
                 </SelectTrigger>
-                <SelectContent className="dark:bg-gray-950">
-                  <SelectItem className="hover:dark:bg-gray-900" value="yes">
+                <SelectContent>
+                  <SelectItem value="yes">
                     Yes
                   </SelectItem>
-                  <SelectItem className="hover:dark:bg-gray-900" value="no">
+                  <SelectItem value="no">
                     No
                   </SelectItem>
                 </SelectContent>
@@ -339,7 +338,7 @@ export default function ApplyPage() {
           }
         }}
       >
-        <DrawerContent className="bg-gray-50 dark:bg-gray-950">
+        <DrawerContent>
           <DrawerHeader>
             <DrawerTitle>Recommended Scholarships</DrawerTitle>
             <DrawerDescription>Select one to continue.</DrawerDescription>
@@ -349,7 +348,7 @@ export default function ApplyPage() {
               {recommendations.map((scholarship) => (
                 <label
                   key={scholarship.id}
-                  className="flex items-start gap-3 p-3 border rounded cursor-pointer hover:bg-gray-100 dark:hover:bg-gray-900"
+                  className="flex items-start gap-3 p-3 border rounded cursor-pointer"
                 >
                   <input
                     type="radio"
@@ -362,8 +361,8 @@ export default function ApplyPage() {
                   />
 
                   <div>
-                    <p className="font-medium">{scholarship.title}</p>
-                    <p className="text-sm text-gray-600">
+                    <h1 className="font-medium">{scholarship.title}</h1>
+                    <p className="text-sm">
                       {scholarship.provider}
                     </p>
                     <p className="text-xs text-gray-500">
