@@ -95,6 +95,8 @@ export default function AllApplicantsPage() {
         })
       );
 
+      await axios.post("/api/admin/send-email", { applicationId, approved });
+
       setSelectedApplicant((prev) => {
         const primaryApplication = prev?.scholarshipApplications?.[0];
         if (!prev || primaryApplication?.id !== applicationId) return prev;
