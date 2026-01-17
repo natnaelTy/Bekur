@@ -13,12 +13,10 @@ datasource db {
   provider = "postgresql"
 }
 
-
 enum UserRole {
   USER
   ADMIN
 }
-
 
 model User {
   id              String            @id @default(cuid())
@@ -26,9 +24,10 @@ model User {
   fullName        String?
   phoneNumber     String?           @unique
   emailVerified   Boolean?          @default(false)
-  role            UserRole?          @default(USER)
+  role            UserRole?         @default(USER)
   accounts        Account[]
   sessions        Session[]
+  googleAccounts  GoogleAccount[]
   createdAt       DateTime          @default(now())
   updatedAt       DateTime          @updatedAt
   image           String?           @db.Text
@@ -92,29 +91,29 @@ model Verification {
 }
 
 model UserApplication {
-  id            String   @id @default(cuid())
+  id String @id @default(cuid())
 
-  userId        String
-  user          User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  userId String
+  user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
 
-  fullName      String?
-  phoneNumber   String?
-  email         String?
-  dateOfBirth   DateTime?
+  fullName            String?
+  phoneNumber         String?
+  email               String?
+  dateOfBirth         DateTime?
   country_applying_to String?
-  purpose       String?
-  program       String?
-  university    String?
-  level         String?
-  hasPassport   Boolean  @default(false)
+  purpose             String?
+  program             String?
+  university          String?
+  level               String?
+  hasPassport         Boolean   @default(false)
 
   passportImg   String? @db.Text
   transcriptImg String? @db.Text
 
-  progress      Int      @default(0) // 0–100 form completion
+  progress Int @default(0) // 0–100 form completion
 
-  createdAt     DateTime @default(now())
-  updatedAt     DateTime @updatedAt
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
 
   scholarshipApplications ScholarshipApplication[]
 
@@ -125,7 +124,7 @@ model Scholarship {
   id                 String   @id @default(uuid())
   title              String
   provider           String
-  country             String?
+  country            String?
   eligible_countries String[]
   level              String[]
   fields_of_study    String[]
@@ -141,38 +140,39 @@ model Scholarship {
 }
 
 model ScholarshipApplication {
-  id              String   @id @default(uuid())
+  id String @id @default(uuid())
 
   userApplicationId String
   scholarshipId     String
 
-  status           ScholarshipApplicationStatus @default(DRAFT)
+  status ScholarshipApplicationStatus @default(DRAFT)
 
-  score            Int?    // matching score %
-  adminNotes       String?
-  externalRef      String? // official portal application ID
-  appliedAt        DateTime?
+  score       Int? // matching score %
+  adminNotes  String?
+  externalRef String? // official portal application ID
+  appliedAt   DateTime?
 
-  reviewer         String?
+  reviewer String?
 
-  userApplication  UserApplication @relation(fields: [userApplicationId], references: [id], onDelete: Cascade)
-  scholarship      Scholarship     @relation(fields: [scholarshipId], references: [id], onDelete: Cascade)
+  userApplication UserApplication @relation(fields: [userApplicationId], references: [id], onDelete: Cascade)
+  scholarship     Scholarship     @relation(fields: [scholarshipId], references: [id], onDelete: Cascade)
 
   payments         Payment[]
   interviews       Interview[]
   motivationLetter MotivationLetter[]
+  emails           Email[]
 
-  createdAt        DateTime @default(now())
-  updatedAt        DateTime @updatedAt
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
 
   @@unique([userApplicationId, scholarshipId])
   @@map("scholarship_application")
 }
 
 enum ScholarshipApplicationStatus {
-  DRAFT       
-  IN_PROGRESS 
-  SUBMITTED   
+  DRAFT
+  IN_PROGRESS
+  SUBMITTED
   INTERVIEW
   OFFERED
   REJECTED
@@ -181,37 +181,86 @@ enum ScholarshipApplicationStatus {
 }
 
 model MotivationLetter {
-  id             String   @id @default(cuid())
-
-  scholarshipApplicationId  String
-  scholarshipApplication    ScholarshipApplication @relation(fields: [scholarshipApplicationId], references: [id], onDelete: Cascade)
-
-  content        String   @db.Text
-  aiGenerated    Boolean  @default(true)
-
-  approved       Boolean  @default(false)
-  approvedBy     String?  // admin id/email
-  approvedAt     DateTime?
-
-  createdAt      DateTime @default(now())
-  updatedAt      DateTime @updatedAt
-}
-
-
-model Payment {
-  id              String   @id @default(cuid())
+  id String @id @default(cuid())
 
   scholarshipApplicationId String
-  application               ScholarshipApplication @relation(fields: [scholarshipApplicationId], references: [id], onDelete: Cascade)
+  scholarshipApplication   ScholarshipApplication @relation(fields: [scholarshipApplicationId], references: [id], onDelete: Cascade)
 
-  amount          Float
-  currency        String   @default("ETB")
-  provider        String?
-  transactionId   String?  @unique
-  status          PaymentStatus @default(PENDING)
+  content     String  @db.Text
+  aiGenerated Boolean @default(true)
 
-  createdAt       DateTime @default(now())
-  updatedAt       DateTime @updatedAt
+  approved   Boolean   @default(false)
+  approvedBy String? // admin id/email
+  approvedAt DateTime?
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model Email {
+  id                       String                 @id @default(cuid())
+  scholarshipApplicationId String
+  scholarshipApplication   ScholarshipApplication @relation(fields: [scholarshipApplicationId], references: [id], onDelete: Cascade)
+
+  toEmail String
+  subject String
+  body    String @db.Text
+
+  gmailMessageId String? @unique
+  gmailThreadId  String?
+
+  status    EmailStatus @default(DRAFT)
+  sentAt    DateTime?
+  repliedAt DateTime?
+
+  followUpCount  Int       @default(0)
+  lastFollowUpAt DateTime?
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@map("email")
+}
+
+enum EmailStatus {
+  DRAFT
+  APPROVED
+  SENT
+  FOLLOW_UP_SENT
+  REPLIED
+  CLOSED
+  FAILED
+}
+
+model GoogleAccount {
+  id     String @id @default(cuid())
+  userId String
+  user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  email        String   @unique
+  accessToken  String   @db.Text
+  refreshToken String   @db.Text
+  expiryDate   DateTime
+  scope        String?  @db.Text
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model Payment {
+  id String @id @default(cuid())
+
+  scholarshipApplicationId String
+  application              ScholarshipApplication @relation(fields: [scholarshipApplicationId], references: [id], onDelete: Cascade)
+
+  amount        Float
+  currency      String        @default("ETB")
+  provider      String?
+  transactionId String?       @unique
+  status        PaymentStatus @default(PENDING)
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
 
   @@map("payment")
 }
@@ -224,19 +273,19 @@ enum PaymentStatus {
 }
 
 model Interview {
-  id              String   @id @default(cuid())
+  id String @id @default(cuid())
 
   scholarshipApplicationId String
-  application               ScholarshipApplication @relation(fields: [scholarshipApplicationId], references: [id], onDelete: Cascade)
+  application              ScholarshipApplication @relation(fields: [scholarshipApplicationId], references: [id], onDelete: Cascade)
 
-  scheduledAt     DateTime
-  interviewer     String?
-  location        String?
-  status          InterviewStatus @default(SCHEDULED)
-  notes           String? @db.Text
+  scheduledAt DateTime
+  interviewer String?
+  location    String?
+  status      InterviewStatus @default(SCHEDULED)
+  notes       String?         @db.Text
 
-  createdAt       DateTime @default(now())
-  updatedAt       DateTime @updatedAt
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
 
   @@map("interview")
 }
