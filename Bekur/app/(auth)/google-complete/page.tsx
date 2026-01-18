@@ -111,7 +111,7 @@ export default function GoogleCompletePage() {
             <div className="space-y-2">
               <label className="text-sm font-medium flex items-center gap-2">
                 <Lock className="h-4 w-4" />
-                New password
+                Password
               </label>
               <Input
                 type="password"
