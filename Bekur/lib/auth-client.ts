@@ -7,11 +7,19 @@ export const authClient = createAuthClient({
   plugins: [adminClient()],
 });
 
-export const handleGoogleSignIn = async () => {
-  const data = await authClient.signIn.social({
+const GOOGLE_CALLBACK_PATH = "/google-complete";
+
+export const handleGoogleSignIn = async (callbackURL?: string) => {
+  const resolvedCallback =
+    callbackURL ||
+    (typeof window !== "undefined"
+      ? `${window.location.origin}${GOOGLE_CALLBACK_PATH}`
+      : GOOGLE_CALLBACK_PATH);
+
+  return authClient.signIn.social({
     provider: "google",
+    callbackURL: resolvedCallback,
   });
-  return data;
 };
 
 export const { signUp, signIn, signOut, useSession } = authClient;
