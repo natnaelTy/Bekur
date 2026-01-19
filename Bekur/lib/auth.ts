@@ -21,9 +21,16 @@ export const auth = betterAuth({
 
   socialProviders: {
     google: {
-      prompt: "select_account",
-      clientId: process.env.GOOGLE_CLIENT_ID as string,
-      clientSecret: process.env.GOOGLE_CLIENT_SECRET as string,
+      clientId: process.env.GOOGLE_CLIENT_ID!,
+      clientSecret: process.env.GOOGLE_CLIENT_SECRET!,
+      authorization: {
+        params: {
+          scope:
+            "openid email profile https://www.googleapis.com/auth/gmail.send",
+          access_type: "offline",
+          prompt: "select_account consent",
+        },
+      },
     },
   },
 });
