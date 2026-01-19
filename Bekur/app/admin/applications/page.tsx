@@ -78,7 +78,9 @@ export default function AllApplicantsPage() {
 
   async function updateApproval(applicationId: string, approved: boolean) {
     try {
-      await axios.patch(`/api/admin/approve/${applicationId}`, { approved });
+      await axios.patch(`/api/admin/approve/${applicationId}`, {
+        approved,
+      });
 
       setApplicants((prev) =>
         prev.map((applicant) => {
@@ -94,8 +96,6 @@ export default function AllApplicantsPage() {
           };
         })
       );
-
-      await axios.post("/api/admin/send-email", { applicationId, approved });
 
       setSelectedApplicant((prev) => {
         const primaryApplication = prev?.scholarshipApplications?.[0];
