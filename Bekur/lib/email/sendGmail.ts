@@ -1,35 +1,45 @@
 import { google } from "googleapis";
 
+type SendEmailInput = {
+  accessToken: string;
+  to: string;
+  subject: string;
+  html: string;
+  cc?: string;
+};
+
 export async function sendGmail({
   accessToken,
-  refreshToken,
   to,
   subject,
-  body,
-}: any) {
+  html,
+  cc,
+}: SendEmailInput) {
   const auth = new google.auth.OAuth2();
-  auth.setCredentials({
-    access_token: accessToken,
-    refresh_token: refreshToken,
-  });
+  auth.setCredentials({ access_token: accessToken });
 
   const gmail = google.gmail({ version: "v1", auth });
 
-  const message = `
-To: "natitaye315@gmail.com"
-Subject: ${subject}
-Content-Type: text/plain; charset=utf-8
+  const headers = [
+    `To: ${to}`,
+    cc ? `Cc: ${cc}` : null,
+    `Subject: ${subject}`,
+    "MIME-Version: 1.0",
+    "Content-Type: text/html; charset=UTF-8",
+  ]
+    .filter(Boolean)
+    .join("\r\n");
 
-${body}
-`;
-
-  const encoded = Buffer.from(message)
+  const rawMessage = Buffer.from(
+    `${headers}\r\n\r\n${html}`
+  )
     .toString("base64")
     .replace(/\+/g, "-")
-    .replace(/\//g, "_");
+    .replace(/\//g, "_")
+    .replace(/=+$/, "");
 
   return gmail.users.messages.send({
     userId: "me",
-    requestBody: { raw: encoded },
+    requestBody: { raw: rawMessage },
   });
 }
