@@ -1,18 +1,24 @@
-export function buildScholarshipEmail(
-  letter: string,
-  scholarship: any,
-  student: any
-) {
+export function buildScholarshipEmail({
+  letter,
+  student,
+  scholarship,
+}: {
+  letter: string;
+  student: { fullName: string; email: string };
+  scholarship: { title: string; provider: string };
+}) {
   return {
-    subject: `Scholarship Application – ${student?.fullName ?? "Applicant"}`,
-    body: `
-Dear Admissions Committee,
+    subject: `Scholarship Application – ${student.fullName}`,
+    html: `
+<p>Dear Admissions Committee,</p>
 
-${letter}
+<p>${letter.replace(/\n/g, "<br />")}</p>
 
-Kind regards,
-${student?.fullName ?? ""}
-Email: ${student?.email ?? ""}
+<p>
+Kind regards,<br/>
+<strong>${student.fullName}</strong><br/>
+${student.email}
+</p>
 `,
   };
 }
