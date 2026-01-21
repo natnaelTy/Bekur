@@ -7,6 +7,9 @@ import {
   IconNotification,
   IconUserCircle,
 } from "@tabler/icons-react"
+import { signOut } from "@/lib/auth-client"
+import React from "react"
+import { redirect } from "next/navigation"
 
 import {
   Avatar,
@@ -39,6 +42,16 @@ export function NavUser({
   }
 }) {
   const { isMobile } = useSidebar()
+
+  const handleLogout = async (event: React.SyntheticEvent) => {
+    event.preventDefault()
+    try {
+      await signOut()
+      redirect("/admin/login")
+    } catch (error) {
+      console.error("Failed to sign out", error)
+    }
+  }
 
   return (
     <SidebarMenu>
@@ -98,7 +111,7 @@ export function NavUser({
               </DropdownMenuItem>
             </DropdownMenuGroup>
             <DropdownMenuSeparator />
-            <DropdownMenuItem>
+            <DropdownMenuItem onClick={handleLogout}>
               <IconLogout />
               Log out
             </DropdownMenuItem>
