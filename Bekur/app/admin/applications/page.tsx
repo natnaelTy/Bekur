@@ -40,15 +40,13 @@ type Applicant = {
 import dateFormate from "@/utils/DateFormate";
 import { adminAPI } from "@/utils/adminAPI";
 
-
-
 export default function AllApplicantsPage() {
   const [search, setSearch] = useState("");
   const [applicants, setApplicants] = useState<Applicant[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [dialogOpen, setDialogOpen] = useState(false);
   const [selectedApplicant, setSelectedApplicant] = useState<Applicant | null>(
-    null
+    null,
   );
 
   useEffect(() => {
@@ -77,6 +75,7 @@ export default function AllApplicantsPage() {
   });
 
   async function updateApproval(applicationId: string, approved: boolean) {
+    if (!applicationId) return;
     try {
       await axios.patch(`/api/admin/approve/${applicationId}`, {
         approved,
@@ -94,8 +93,10 @@ export default function AllApplicantsPage() {
               { ...primaryApplication, status: updatedStatus },
             ],
           };
-        })
+        }),
       );
+
+      await axios.post(`/api/admin/send-email`, { applicationId });
 
       setSelectedApplicant((prev) => {
         const primaryApplication = prev?.scholarshipApplications?.[0];
@@ -125,8 +126,9 @@ export default function AllApplicantsPage() {
 
   console.log(applicants);
 
-  const motivationLetter = selectedApplicant?.scholarshipApplications?.[0]?.motivationLetter?.[0]?.content;
-
+  const motivationLetter =
+    selectedApplicant?.scholarshipApplications?.[0]?.motivationLetter?.[0]
+      ?.content;
 
   return (
     <div className="max-h-screen p-6 space-y-4">
@@ -204,20 +206,21 @@ export default function AllApplicantsPage() {
                         <TableCell>
                           <Badge
                             className={`px-3 py-1 rounded-full text-xs ${
-                              status === "APPROVED" ||
-                              status === "IN_PROGRESS"
+                              status === "APPROVED" || status === "IN_PROGRESS"
                                 ? "bg-yellow-400/10 text-yellow-400 border border-yellow-400/20"
                                 : status === "SUBMITTED"
-                                ? "bg-gray-400/10 text-gray-400 border border-gray-400/20"
-                                : status === "REJECTED"
-                                ? "bg-red-400/10 text-red-400 border border-red-400/20"
-                                : ""
+                                  ? "bg-gray-400/10 text-gray-400 border border-gray-400/20"
+                                  : status === "REJECTED"
+                                    ? "bg-red-400/10 text-red-400 border border-red-400/20"
+                                    : ""
                             }`}
                           >
                             {status ?? "N/A"}
                           </Badge>
                         </TableCell>
-                        <TableCell>{dateFormate(applicant.createdAt)}</TableCell>
+                        <TableCell>
+                          {dateFormate(applicant.createdAt)}
+                        </TableCell>
                         <TableCell className="text-right space-x-2">
                           <Button
                             size="sm"
@@ -275,14 +278,18 @@ export default function AllApplicantsPage() {
                 <span className="text-muted-foreground">Status</span>
                 <Badge
                   className={`px-3 py-1 rounded-full text-xs ${
-                    selectedApplicant.scholarshipApplications?.[0]?.status === "APPROVED" ||
-                    selectedApplicant.scholarshipApplications?.[0]?.status === "IN_PROGRESS"
+                    selectedApplicant.scholarshipApplications?.[0]?.status ===
+                      "APPROVED" ||
+                    selectedApplicant.scholarshipApplications?.[0]?.status ===
+                      "IN_PROGRESS"
                       ? "bg-yellow-400/10 text-yellow-400 border border-yellow-400/20"
-                      : selectedApplicant.scholarshipApplications?.[0]?.status === "SUBMITTED"
-                      ? "bg-gray-400/10 text-gray-400 border border-gray-400/20"
-                      : selectedApplicant.scholarshipApplications?.[0]?.status === "REJECTED"
-                      ? "bg-red-400/10 text-red-400 border border-red-400/20"
-                      : ""
+                      : selectedApplicant.scholarshipApplications?.[0]
+                            ?.status === "SUBMITTED"
+                        ? "bg-gray-400/10 text-gray-400 border border-gray-400/20"
+                        : selectedApplicant.scholarshipApplications?.[0]
+                              ?.status === "REJECTED"
+                          ? "bg-red-400/10 text-red-400 border border-red-400/20"
+                          : ""
                   }`}
                 >
                   {selectedApplicant.scholarshipApplications?.[0]?.status}
@@ -314,7 +321,13 @@ export default function AllApplicantsPage() {
               </div>
               <div className="flex items-center justify-between">
                 <span className="text-muted-foreground">Has Passport</span>
-                <span className={selectedApplicant.hasPassport ? "text-green-500 font-medium" : "font-medium text-red-500"}>
+                <span
+                  className={
+                    selectedApplicant.hasPassport
+                      ? "text-green-500 font-medium"
+                      : "font-medium text-red-500"
+                  }
+                >
                   {selectedApplicant.hasPassport ? "Yes" : "No"}
                 </span>
               </div>
@@ -335,7 +348,7 @@ export default function AllApplicantsPage() {
               </p>
             </div>
           </div>
-          
+
           <AlertDialogFooter className="flex items-center gap-5">
             <AlertDialogCancel className="rounded-full sm">
               Close
@@ -348,7 +361,7 @@ export default function AllApplicantsPage() {
                   onClick={() =>
                     updateApproval(
                       selectedApplicant.scholarshipApplications?.[0]?.id ?? "",
-                      false
+                      false,
                     )
                   }
                   disabled={!selectedApplicant.scholarshipApplications?.[0]?.id}
@@ -361,7 +374,7 @@ export default function AllApplicantsPage() {
                   onClick={() =>
                     updateApproval(
                       selectedApplicant.scholarshipApplications?.[0]?.id ?? "",
-                      true
+                      true,
                     )
                   }
                   disabled={!selectedApplicant.scholarshipApplications?.[0]?.id}
