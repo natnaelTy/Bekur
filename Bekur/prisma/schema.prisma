@@ -133,6 +133,7 @@ model Scholarship {
   deadline           String?
   application_url    String
   description        String
+  contactEmail       String? 
 
   createdAt DateTime @default(now())
 
