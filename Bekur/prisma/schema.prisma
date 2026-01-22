@@ -135,10 +135,23 @@ model Scholarship {
   description        String
   contactEmail       String? 
 
+  applicationChannel  ApplicationChannel @default(UNIVERSITY_PORTAL)
+  applicationUrl      String?   // portal OR partner link
+  applicationEmail    String?   // only if EMAIL is allowed
+  partnerName         String?   // ApplyBoard, Studyportals
+
   createdAt DateTime @default(now())
 
   applications ScholarshipApplication[]
 }
+
+enum ApplicationChannel {
+  EMAIL
+  UNIVERSITY_PORTAL
+  PARTNER_PLATFORM
+  MANUAL_UPLOAD
+}
+
 
 model ScholarshipApplication {
   id String @id @default(uuid())
